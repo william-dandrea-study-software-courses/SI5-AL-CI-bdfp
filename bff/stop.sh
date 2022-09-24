@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "=> Stopping life-support-service"
+echo "=> Stopping bff"
 docker-compose --env-file ./.env.docker \
-               --file docker-compose-life-support.yml down
+               --file docker-compose-bff.yml down

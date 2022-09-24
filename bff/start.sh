@@ -1,9 +1,9 @@
 #!/bin/bash
 
-source ../common-functions.sh
 
-echo "=> Starting life-support-service"
+
+echo "=> Starting bff"
 docker-compose --env-file ./.env.docker \
-               --file docker-compose-life-support.yml up -d
+               --file docker-compose-bff.yml up -d
 
-wait_on_health http://localhost:4304 ${PWD##*/}
+
