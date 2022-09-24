@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  bff-service:
+    image: "soa-team-e/life-support-service"
+    restart: always
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    networks:
+      - ci-bdfp-bff-network
+
+networks:
+  ci-bdfp-bff-network:
+    driver: bridge
