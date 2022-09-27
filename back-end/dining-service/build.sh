@@ -2,7 +2,7 @@
 
 APP="${PWD##*/}"
 
-# Compiling and buildpacking docker image
-echo "Compiling $APP"
-mvn clean spring-boot:build-image -Dspring-boot.build-image.imageName="restaurant/$APP"
-echo "Done"
+# Building docker image
+echo "Begin: Building docker image nestjs-restaurant/$APP"
+docker build -t "nestjs-restaurant/$APP" .
+echo "Done: Building docker image nestjs-restaurant/$APP"
