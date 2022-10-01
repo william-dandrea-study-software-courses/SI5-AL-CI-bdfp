@@ -8,6 +8,7 @@ import {HealthModule} from "./health/health.module";
 import { TableResumeModule } from './table-resume/table-resume.module';
 import { MenuModule } from './menu/menu.module';
 import { OrderModule } from './order/order.module';
+import {HttpModule} from "@nestjs/axios";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { OrderModule } from './order/order.module';
       TableResumeModule,
       MenuModule,
       OrderModule,
+      HttpModule,
   ],
   providers: [],
 })
