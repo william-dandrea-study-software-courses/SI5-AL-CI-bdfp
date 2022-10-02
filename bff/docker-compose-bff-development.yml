@@ -1,4 +1,6 @@
 version: "3.9"
+
+
 services:
   life-support-service-development:
     build:
@@ -13,9 +15,5 @@ services:
     env_file:
       - .env
     command: npm run start:dev
-    networks:
-      - ci-bdfp-bff-network-development
-
-networks:
-  ci-bdfp-bff-network-development:
-    driver: bridge
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

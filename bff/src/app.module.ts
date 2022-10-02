@@ -9,6 +9,9 @@ import { TableResumeModule } from './table-resume/table-resume.module';
 import { MenuModule } from './menu/menu.module';
 import { OrderModule } from './order/order.module';
 import {HttpModule} from "@nestjs/axios";
+import { KitchenService } from './shared/services/kitchen/kitchen.service';
+import { MenuService } from './shared/services/menu/menu.service';
+import { DiningService } from './shared/services/dining/dining.service';
 
 @Module({
   imports: [
@@ -22,6 +25,6 @@ import {HttpModule} from "@nestjs/axios";
       OrderModule,
       HttpModule,
   ],
-  providers: [],
+  providers: [KitchenService, MenuService, DiningService],
 })
 export class AppModule {}
