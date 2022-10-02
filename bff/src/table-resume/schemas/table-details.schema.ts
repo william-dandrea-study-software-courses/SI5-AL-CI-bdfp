@@ -1,8 +1,15 @@
 export class TableDetails {
-    _id: string;
     tableNumber: number;
-    status: string;
-    paid: boolean;
+    statusOrder: StatusTableOrder;
+    isTaken: boolean;
+    isOrderPaid: boolean;
     priceAmount: number | null;
-    remainingTime: number | null;
+}
+
+export enum StatusTableOrder {
+    ANY_ORDER = "ANY_ORDER",
+    ORDER_GIVEN_TO_KITCHEN = "ORDER_GIVEN_TO_KITCHEN",
+    ORDER_IN_PROGRESS = "ORDER_IN_PROGRESS",
+    ORDER_READY_TO_BE_DELIVERED_TO_TABLE = "ORDER_READY_TO_BE_DELIVERED_TO_TABLE",
+    ORDER_DELIVERED_TO_TABLE = "ORDER_DELIVERED_TO_TABLE",
 }

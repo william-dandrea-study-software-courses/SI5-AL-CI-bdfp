@@ -10,15 +10,9 @@ import {TableServerDto} from "../../shared/dto/table-server.dto";
 export class TableResumeController {
     constructor(private readonly tableResumeService: TableResumeService) {}
 
-    @ApiOkResponse({ type: TableDetails, isArray: true })
-    @Get()
-    public async listAllTables(): Promise<TableServerDto[]> {
+    @ApiOkResponse({ type: TableDetails, isArray: true, description: "All the informations about the tables in the room" })
+    @Get('/infos')
+    public async listAllTables(): Promise<TableDetails[]> {
         return this.tableResumeService.listTables();
-    }
-
-    @ApiParam({ name: 'tableNumber' })
-    @Post(':tableNumber/pay-bill')
-    public async payBill(@Param() getTableNumberParams: GetTableNumberParams): Promise<boolean> {
-        return true;
     }
 }
