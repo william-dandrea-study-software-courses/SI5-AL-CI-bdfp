@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  bff-service:
+    build:
+      context: .
+    restart: always
+    ports:
+      - 3200:3200
+    networks:
+      - ci-bdfp-bff-network
+
+networks:
+  ci-bdfp-bff-network:
+    driver: bridge
