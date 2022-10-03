@@ -1,5 +1,6 @@
 import {AllRoutes} from "./routes/routes";
 
+
 function App() {
   return (
     <div className="App">

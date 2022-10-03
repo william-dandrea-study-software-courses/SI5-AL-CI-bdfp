@@ -1,9 +1,10 @@
 import React from "react";
+import {TableList} from "../components";
 
 const PageTable = () => {
     console.log("dans la pagehome");
     return(
-        <div>Hello World</div>
+        <TableList/>
     )
 }
 
