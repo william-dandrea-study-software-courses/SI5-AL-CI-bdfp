@@ -22,11 +22,9 @@ const TableList = observer(() => {
             <Typography textAlign={"center"} marginBottom={2}>Liste des tables</Typography>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 {allTables.map(x =>
-
                     <Grid item xs={6}>
-                        <TableCard tableInfo={x}/>
+                        <TableCard  tableInfo={x}/>
                     </Grid>
-
                 )}
             </Grid>
         </div>
