@@ -1,5 +1,4 @@
-import axios from "axios";
+import { TableService } from "./TableService";
+import { getHelloWorld } from "./healthCheck";
 
-export const getHelloWorld = () => {
-    return axios.get(`http://localhost:5301/health`);
-}
+export { TableService, getHelloWorld };
