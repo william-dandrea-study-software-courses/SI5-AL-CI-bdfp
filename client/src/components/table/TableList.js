@@ -24,7 +24,7 @@ const TableList = observer(() => {
       </Typography>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {allTables.map((x) => (
-          <Grid item xs={6}>
+          <Grid item xs={6} key={x.tableNumber}>
             <TableCard tableInfo={x} />
           </Grid>
         ))}
