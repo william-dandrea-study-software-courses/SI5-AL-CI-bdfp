@@ -5,7 +5,7 @@ import {PreparationDto, TableOrderServerDto} from "../../dto/table-order-server.
 import {HttpService} from "@nestjs/axios";
 
 @Injectable()
-export class DiningService {
+export class DiningServerService {
 
     constructor(public readonly httpService: HttpService) {}
 
@@ -66,8 +66,8 @@ export class DiningService {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .post<TableOrderServerDto>(`${URL_DINING_SERVICE}/tableOrders`, {
-                    tableNumber: tableNumber,
-                    customersCount: customersCount
+                    tableNumber: Number(tableNumber),
+                    customersCount: Number(customersCount)
                 })
                 .then(table => {
                     resolve(table.data)
@@ -93,14 +93,14 @@ export class DiningService {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .post<TableOrderServerDto>(`${URL_DINING_SERVICE}/tableOrders/${tableOrderId}`, {
-                    menuItemId,
-                    menuItemShortName,
-                    howMany,
+                    menuItemId: menuItemId,
+                    menuItemShortName: menuItemShortName,
+                    howMany: howMany,
                 })
                 .then(table => {
                     resolve(table.data)
                 }).catch(error => {
-                reject(error)
+                    reject(error)
             })
         })
     }
@@ -128,6 +128,4 @@ export class DiningService {
             })
         })
     }
-
-
 }

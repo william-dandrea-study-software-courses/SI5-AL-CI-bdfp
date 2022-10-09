@@ -1,101 +1,117 @@
-import { Injectable } from '@nestjs/common';
-import { TableDetails } from "../schemas/table-details.schema";
-import { HttpService } from "@nestjs/axios";
-import {TableServerDto} from "../../shared/dto/table-server.dto";
-import {BehaviorSubject} from "rxjs";
-import {URL_DINING_SERVICE} from "../../config";
+import {Injectable} from '@nestjs/common';
+import {OrderItem, StatusTableOrder, TableDetails} from "../schemas/table-details.schema";
+import {HttpService} from "@nestjs/axios";
 import {
     OrderingItemDto,
     OrderingLineDto,
-    PreparationDto, PreparedItemDto,
-    TableOrderServerDto
+    PreparationDto,
+    PreparedItemDto
 } from "../../shared/dto/table-order-server.dto";
-import {DiningService} from "../../shared/services/dining/dining.service";
+import {DiningServerService} from "../../shared/services/dining/dining-server.service";
+import {KitchenServerService} from "../../shared/services/kitchen/kitchen-server.service";
+import {StatePreparation} from "../../shared/dto/kitchen-server.dto";
 
 @Injectable()
 export class TableResumeService {
-    constructor(private readonly httpService: HttpService, private readonly diningService: DiningService) {}
+    constructor(private readonly httpService: HttpService, private readonly diningService: DiningServerService, private readonly kitchenService: KitchenServerService) {}
 
 
     /**
      *  tableNumber: number;
-     *     statusOrder: StatusTableOrder;
-     *     isTaken: boolean;
-     *     isOrderPaid: boolean;
-     *     priceAmount: number | null;
+     *  statusOrder: StatusTableOrder;
+     *  isTaken: boolean;
+     *  isOrderPaid: boolean;
+     *  priceAmount: number | null;
      */
 
-    public listTables(): Promise<TableDetails[]> {
+    public async listTables(): Promise<TableDetails[]> {
 
-        this.diningService.getTables().then(tables => {
-            tables.forEach(table => {
-                const tableNumber = table.number;
-                const isTaken = table.taken;
 
-                const tableOrderId: string | null = table.tableOrderId;
-                if (tableOrderId) {
-                    this.diningService.getTableOrder(tableOrderId).then(tableOrder => {
-                        const isOrderPaid: boolean = tableOrder.billed != null;
+        return new Promise<TableDetails[]>(async (resolve, reject) => {
+            const tableDetails: TableDetails[] = []
 
-                        // tableOrder.lines.map(line => line.sentForPreparation)
+            await this.diningService.getTables().then(async tables => {
+                for (const table of tables) {
+                    const tableNumber = table.number;
+                    const isTaken = table.taken;
+                    let statusOrder: StatusTableOrder = StatusTableOrder.ANY_ORDER;
+                    const tableOrderId: string | null = table.tableOrderId;
+                    let isOrderPaid: boolean = false;
+                    let lines: OrderItem[] = []
+                    let readyToBeServedPreparationsId: string[] = []
 
-                    })
+
+
+                    if (tableOrderId) {
+                        await this.diningService.getTableOrder(tableOrderId).then(async tableOrder => {
+                            isOrderPaid = tableOrder.billed != null;
+
+                            lines = tableOrder.lines.map(line => new OrderItem(line.item.shortName, line.howMany, line.sentForPreparation))
+                            if (lines.length > 0) {
+                                statusOrder = StatusTableOrder.ORDER_SENT_TO_KITCHEN;
+                            }
+                            if (lines.map(line => line.sentToPreparation).includes(false)) {
+                                statusOrder = StatusTableOrder.ORDER_NOT_SENT_TO_KITCHEN;
+                            }
+
+                            await this.kitchenService.getPreparations(tableNumber, StatePreparation.PREPARATION_STARTED).then(preparations => {
+                                if (preparations.length > 0) {
+                                    statusOrder = StatusTableOrder.ORDER_IN_PROGRESS;
+                                }
+                            }).catch(error => reject(error));
+
+                            await this.kitchenService.getPreparations(tableNumber, StatePreparation.READY_TO_BE_SERVED).then(preparations => {
+                                if (preparations.length > 0) {
+                                    statusOrder = StatusTableOrder.ORDER_READY_TO_BE_DELIVERED_TO_TABLE
+                                    preparations.forEach(prep => {
+                                        readyToBeServedPreparationsId.push(prep._id)
+                                    })
+                                }
+                            }).catch(error => reject(error));
+
+                            if (isOrderPaid) {
+                                statusOrder = StatusTableOrder.ANY_ORDER
+                            }
+
+
+                        }).catch(error => reject(error));
+                    }
+                    tableDetails.push(new TableDetails(tableNumber, statusOrder, isTaken, isOrderPaid, lines, tableOrderId, readyToBeServedPreparationsId))
                 }
-            })
+            }).catch(error => reject(error))
+
+            resolve(tableDetails);
         })
-
-
-        return null;
     }
 
 
-    public getTableInfos(): Promise<TableDetails[]> {
-        this.diningService.getTables().then(tables => {
+    public async openTable(tableNumber: number, numberOfPersons: number): Promise<any> {
 
-            tables.forEach(table => {
-                const tableId: string = table._id;
-                const tableNumber: number = table.number;
-                const isTableTakenBySomeone: boolean = table.taken;
-                const tableOrderId: string | null = table.tableOrderId;
-
-                if (tableOrderId) {
-                    // We have an order on this table, we get the infos
-                    this.diningService.getTableOrder(tableOrderId).then(tableOrder => {
-                        const orderId: string = tableOrder._id;
-                        const numberOfCustomerAtTable: number = tableOrder.customersCount;
-                        const orderBillDate: Date | null = tableOrder.billed;
-                        const orderLines: OrderingLineDto[] = tableOrder.lines;
-                        const orderOpenedDate: Date = tableOrder.opened;
-                        const orderPreparations: PreparationDto[] = tableOrder.preparations;
-
-                        orderLines.forEach(orderLine => {
-                            const orderLineHowMany = orderLine.howMany;
-                            const isOrderLineSentToPreparation = orderLine.sentForPreparation;
-                            const orderLineItems: OrderingItemDto = orderLine.item;
-                            const idOrderLineItemInMenu: string = orderLine.item._id
-                            const shortNameOrderLineItem: string = orderLine.item.shortName
-                        });
-
-                        orderPreparations.forEach(orderPreparation => {
-                            const idOrderPreparation: string = orderPreparation._id;
-                            const orderPreparationShouldBeReadyAt: string = orderPreparation.shouldBeReadyAt;
-                            const preparedItemsOrderPreparation: PreparedItemDto[] = orderPreparation.preparedItems;
-
-                            preparedItemsOrderPreparation.forEach(preparedItem => {
-                                const preparedItemId: string = preparedItem._id;
-                                const preparedItemShortName: string = preparedItem.shortName;
-                            })
-                        })
-                    })
-                }
-            })
-
+        return new Promise(async (resolve, reject) => {
+            await this.diningService.postTableOrders(tableNumber, numberOfPersons).then(async () => {
+                await this.listTables().then(allTables => resolve(allTables)).catch(error => reject(error))
+            }).catch(error => reject(error))
         })
-        return null;
+
     }
 
+    public async payAndCloseTable(tableOrderId: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.diningService.postTableOrderBill(tableOrderId).then(() => {
+                this.listTables().then(allTables => {
+                    resolve(allTables);
+                }).catch(error => reject(error))
+            }).catch(error => reject(error))
+        });
+    }
 
-
-
-
+    public async servedTable(preparationId: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.kitchenService.postPreparationTakenToTable(preparationId).then(() => {
+                this.listTables().then(allTables => {
+                    resolve(allTables);
+                }).catch(error => reject(error))
+            }).catch(error => reject(error))
+        })
+    }
 }

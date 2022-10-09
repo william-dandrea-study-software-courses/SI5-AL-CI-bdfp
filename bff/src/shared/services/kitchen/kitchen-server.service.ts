@@ -14,12 +14,12 @@ import {
 } from "../../dto/kitchen-server.dto";
 
 @Injectable()
-export class KitchenService {
+export class KitchenServerService {
     constructor(private readonly httpService: HttpService) {}
 
 
     // The preparations filtered by state and/or table number.
-    private async getPreparations(tableNumber: number, statePreparation: StatePreparation): Promise<Preparation[]> {
+    public async getPreparations(tableNumber: number, statePreparation: StatePreparation): Promise<Preparation[]> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .get<Preparation[]>(`${URL_KITCHEN_SERVICE}/preparations?tableNumber=${tableNumber}&state=${statePreparation}`)
@@ -34,7 +34,7 @@ export class KitchenService {
 
 
     // The new preparations corresponding to items sent to cook.
-    private async postPreparations(tableNumber: number, itemToBeCooked: PreparationRequest[]): Promise<Preparation[]> {
+    public async postPreparations(tableNumber: number, itemToBeCooked: PreparationRequest[]): Promise<Preparation[]> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .post<Preparation[]>(`${URL_KITCHEN_SERVICE}/preparations`, {
@@ -52,7 +52,7 @@ export class KitchenService {
 
 
     // The searched preparation.
-    private async getPreparation(preparationId: number): Promise<Preparation> {
+    public async getPreparation(preparationId: number): Promise<Preparation> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .get<Preparation>(`${URL_KITCHEN_SERVICE}/preparations/${preparationId}`)
@@ -66,10 +66,10 @@ export class KitchenService {
     }
 
     // The preparation has been successfully declared as brought to the table.
-    private async postPreparationTakenToTable(preparationId: number): Promise<Preparation> {
+    public async postPreparationTakenToTable(preparationId: string): Promise<Preparation> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
-                .post<Preparation>(`${URL_KITCHEN_SERVICE}/preparations/${preparationId}`)
+                .post<Preparation>(`${URL_KITCHEN_SERVICE}/preparations/${preparationId}/takenToTable`)
                 .then(preparations => {
                     resolve(preparations.data)
                 }).catch(error => {
@@ -81,7 +81,7 @@ export class KitchenService {
 
 
     // The searched prepared item.
-    private async getPreparedItem(preparedItemId: number): Promise<PreparedItem> {
+    public async getPreparedItem(preparedItemId: number): Promise<PreparedItem> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .get<PreparedItem>(`${URL_KITCHEN_SERVICE}/preparedItems/${preparedItemId}`)
@@ -95,7 +95,7 @@ export class KitchenService {
     }
 
     // The searched prepared item's recipe.
-    private async getPreparedItemsRecipe(preparedItemId: number): Promise<Recipe> {
+    public async getPreparedItemsRecipe(preparedItemId: number): Promise<Recipe> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .get<Recipe>(`${URL_KITCHEN_SERVICE}/preparedItems/${preparedItemId}/recipe`)
@@ -109,7 +109,7 @@ export class KitchenService {
     }
 
     // All items to start cooking now for the requested post.
-    private async getPreparedItems(post: PostEnum): Promise<PreparedItem[]> {
+    public async getPreparedItems(post: PostEnum): Promise<PreparedItem[]> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .get<PreparedItem[]>(`${URL_KITCHEN_SERVICE}/preparedItems?post=${post}`)
@@ -124,7 +124,7 @@ export class KitchenService {
 
 
     // All items to start cooking now for the requested post.
-    private async postStartPrepareItem(preparedItemId: number): Promise<PreparedItem> {
+    public async postStartPrepareItem(preparedItemId: number): Promise<PreparedItem> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .post<PreparedItem>(`${URL_KITCHEN_SERVICE}/preparedItems/${preparedItemId}/start`)
@@ -137,7 +137,7 @@ export class KitchenService {
         })
     }
 
-    private async postFinishPrepareItem(preparedItemId: number): Promise<PreparedItem> {
+    public async postFinishPrepareItem(preparedItemId: number): Promise<PreparedItem> {
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
                 .post<PreparedItem>(`${URL_KITCHEN_SERVICE}/preparedItems/${preparedItemId}/finish`)
