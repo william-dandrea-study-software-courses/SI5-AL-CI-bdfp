@@ -3,9 +3,10 @@ import {
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
-  ApiNotFoundResponse, ApiOkResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiParam,
-  ApiTags
+  ApiTags,
 } from '@nestjs/swagger';
 
 import { AddMenuItemDto } from '../dto/add-menu-item.dto';
@@ -32,15 +33,26 @@ export class MenusController {
   @ApiParam({ name: 'menuItemId' })
   @Get(':menuItemId')
   @ApiOkResponse({ type: MenuItem })
-  @ApiNotFoundResponse({ type: MenuItemIdNotFoundException, description: 'MenuItem not found' })
-  async getMenuItem(@Param() getMenuItemParams: GetMenuItemParams): Promise<MenuItem> {
+  @ApiNotFoundResponse({
+    type: MenuItemIdNotFoundException,
+    description: 'MenuItem not found',
+  })
+  async getMenuItem(
+    @Param() getMenuItemParams: GetMenuItemParams,
+  ): Promise<MenuItem> {
     return this.menusService.findOne(getMenuItemParams.menuItemId);
   }
 
   @ApiBody({ type: AddMenuItemDto })
   @Post()
-  @ApiCreatedResponse({ description: 'The menu item has been successfully added.', type: MenuItem })
-  @ApiConflictResponse({ type: MenuItemShortNameAlreadyExistsException, description: 'Menu short name already exists' })
+  @ApiCreatedResponse({
+    description: 'The menu item has been successfully added.',
+    type: MenuItem,
+  })
+  @ApiConflictResponse({
+    type: MenuItemShortNameAlreadyExistsException,
+    description: 'Menu short name already exists',
+  })
   async addMenuItem(@Body() addMenuItemDto: AddMenuItemDto) {
     return await this.menusService.create(addMenuItemDto);
   }
