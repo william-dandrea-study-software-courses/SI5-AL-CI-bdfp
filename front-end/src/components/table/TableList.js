@@ -24,6 +24,7 @@ const TableList = observer(() => {
                     <Grid item xs={6}>
                         <TableCard tableInfo={x} />
                     </Grid>
+
                 )}
             </Grid>
         </div>

@@ -8,5 +8,5 @@ export {
     Menu,
     MenuCard,
     TableOrders,
-    OrderCard
+    OrderCard,
 }
