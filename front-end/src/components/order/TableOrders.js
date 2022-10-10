@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react-lite';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { TableOrdersService } from '../../services';
+import { TableService } from '../../services';
 import { Grid, Typography } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import React from 'react';
@@ -15,10 +15,10 @@ const TableOrders = observer(() => {
 
     useEffect(() => {
         setIsOrdersLoading(true);
-        TableOrdersService.getTableOrdersById(id)
+        TableService.getTableOrdersById(id)
             .then(resp => setTableOrders(resp.data))
             .finally(() => setIsOrdersLoading(false));
-    }, [setTableOrders, setIsOrdersLoading]);
+    }, [setTableOrders, setIsOrdersLoading, id]);
 
     return (
         <div>
@@ -27,9 +27,9 @@ const TableOrders = observer(() => {
             </div>
             < Typography textAlign={"center"} marginBottom={2}>Liste des commandes de la table n°{TableOrders.tableNumber}</Typography>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                {TableOrders.lines?.map(item =>
+                {TableOrders.lines?.map(x =>
                     <Grid item xs={6}>
-                        <OrderCard orderInfo={item} />
+                        <OrderCard orderInfo={x} />
                     </Grid>
                 )}
             </Grid>

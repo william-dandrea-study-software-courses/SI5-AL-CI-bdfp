@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { TableService } from "../../services";
 import TableCard from "./TableCard";
 import { Grid, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 
 const TableList = observer(() => {
     const [allTables, setAllTables] = useState([]);
@@ -24,7 +23,6 @@ const TableList = observer(() => {
                     <Grid item xs={6}>
                         <TableCard tableInfo={x} />
                     </Grid>
-
                 )}
             </Grid>
         </div>

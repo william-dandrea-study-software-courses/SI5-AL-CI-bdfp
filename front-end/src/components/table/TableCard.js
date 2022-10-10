@@ -40,7 +40,6 @@ const TableCard = observer((
             } else {
                 alert("Veuillez saisir un nombre de personnes valide");
             }
-
         }
     }, [navigate, tableInfo])
 

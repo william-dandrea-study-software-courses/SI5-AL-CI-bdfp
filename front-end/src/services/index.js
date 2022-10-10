@@ -1,10 +1,8 @@
 
-import {TableService} from "./TableService"
-import {MenuService} from "./MenuService";
-import {TableOrdersService} from "./TableOrdersService";
+import { TableService } from "./TableService"
+import { MenuService } from "./MenuService";
 
 export {
     TableService,
     MenuService,
-    TableOrdersService
 }
