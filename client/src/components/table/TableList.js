@@ -15,8 +15,6 @@ const TableList = observer(() => {
       .finally(() => setIsAllTableLoading(false));
   }, [setAllTables, setIsAllTableLoading]);
 
-  console.log(allTables);
-
   return (
     <div>
       <Typography textAlign={"center"} marginBottom={2}>
