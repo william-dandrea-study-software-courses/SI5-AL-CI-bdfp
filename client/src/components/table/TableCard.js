@@ -2,18 +2,21 @@ import React, { useCallback } from "react";
 import { observer } from "mobx-react-lite";
 import {
   Button,
+  ButtonGroup,
   Card,
   CardActions,
   CardContent,
+  Grid,
   Typography,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const TableCard = observer(({ tableInfo }) => {
   const navigate = useNavigate();
 
-  const handleClick = useCallback(
+  const handleRedirect = useCallback(
     (path) => {
       console.log(path);
       navigate(path);
@@ -21,26 +24,52 @@ const TableCard = observer(({ tableInfo }) => {
     [navigate]
   );
 
+  const handleOrder = useCallback(() => {
+    navigate("/" + tableInfo.tableNumber + "/menu");
+  }, [navigate, tableInfo]);
+
+  const openTablehandler = useCallback((path) => {
+    axios
+      .post(path, {
+        numberOfPersons: 4,
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .then(function (error) {
+        console.log(error);
+      });
+  });
+
   return (
     <Card
       variant="outlined"
       style={{ backgroundColor: tableInfo.isTaken ? blue[300] : "" }}
-      onClick={() => handleClick("/tables/" + tableInfo.tableNumber)}
     >
-      <CardContent>
+      <CardContent
+        onClick={() => handleRedirect("/tables/" + tableInfo.tableNumber)}
+      >
         <Typography textAlign={"center"}>
           Table n°{tableInfo.tableNumber}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small" color={"success"}>
-          {" "}
-          Open{" "}
-        </Button>
-        <Button size="small" color={"error"}>
-          {" "}
-          Close{" "}
-        </Button>
+        {tableInfo.isTaken ? (
+          <ButtonGroup variant="contained">
+            <Button size="small" color={"info"} onClick={() => handleOrder()}>
+              Order
+            </Button>
+            <Button size="small" color={"error"}>
+              {" "}
+              Close{" "}
+            </Button>
+          </ButtonGroup>
+        ) : (
+          <Button size="small" color={"success"} variant="contained">
+            {" "}
+            Open{" "}
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

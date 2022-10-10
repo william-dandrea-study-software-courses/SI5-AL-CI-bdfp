@@ -8,8 +8,8 @@ export const AllRoutes = () => (
   <BrowserRouter>
     <Routes>
       <Route exact path="/" element={<PageTable />}></Route>
-      <Route path="/tables/:tableId" element={<PageTableDetails />}></Route>
-      <Route path="/menu" element={<Menu />}></Route>
+      <Route path="/tables/:tableNumber" element={<PageTableDetails />}></Route>
+      <Route path="/:tableNumber/menu" element={<Menu />}></Route>
     </Routes>
   </BrowserRouter>
 );
