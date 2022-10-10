@@ -1,5 +1,7 @@
-import {TableService} from "./TableService"
+import { TableService } from "./TableService"
+import { TableOrdersService } from "./TableOrdersService"
 
 export {
-    TableService
+    TableService,
+    TableOrdersService
 }
