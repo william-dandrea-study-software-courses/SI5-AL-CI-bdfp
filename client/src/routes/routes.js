@@ -9,7 +9,7 @@ export const AllRoutes = () => (
     <Routes>
       <Route exact path="/" element={<PageTable />}></Route>
       <Route path="/tables/:tableNumber" element={<PageTableDetails />}></Route>
-      <Route path="/:tableNumber/menu" element={<Menu />}></Route>
+      <Route path="/:tableOrderId/menu" element={<Menu />}></Route>
     </Routes>
   </BrowserRouter>
 );

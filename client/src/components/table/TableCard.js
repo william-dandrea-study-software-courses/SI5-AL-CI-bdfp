@@ -25,7 +25,7 @@ const TableCard = observer(({ tableInfo }) => {
   );
 
   const handleOrder = useCallback(() => {
-    navigate("/" + tableInfo.tableNumber + "/menu");
+    navigate("/" + tableInfo.tableOrderId + "/menu");
   }, [navigate, tableInfo]);
 
   const openTablehandler = useCallback((path) => {
@@ -40,6 +40,8 @@ const TableCard = observer(({ tableInfo }) => {
         console.log(error);
       });
   });
+
+  console.log(tableInfo)
 
   return (
     <Card

@@ -1,4 +1,4 @@
-import Item from "./Item";
+import Item from "./MenuItem";
 import Menu from "./Menu";
 
 export { Item, Menu };
