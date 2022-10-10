@@ -3,7 +3,6 @@ import { Card, CardContent, Typography } from '@mui/material';
 import React from 'react';
 
 const OrderCard = observer(({ orderInfo }) => {
-    console.log(orderInfo);
     return (
         <Card>
             <CardContent>

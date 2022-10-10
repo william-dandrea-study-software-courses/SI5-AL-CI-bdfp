@@ -20,7 +20,6 @@ const TableOrders = observer(() => {
             .finally(() => setIsOrdersLoading(false));
     }, [setTableOrders, setIsOrdersLoading]);
 
-    console.log(TableOrders);
     return (
         <div>
             <div style={{ position: "absolute" }} onClick={() => navigate("/")}>

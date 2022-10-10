@@ -25,7 +25,7 @@ const TableCard = observer((
     }, [navigate]);
 
     return (
-        <Card variant="outlined" style={{ backgroundColor: (tableInfo.taken ? orange[800] : "") }}>
+        <Card variant="outlined" style={{ backgroundColor: (tableInfo.taken ? orange["A100"] : "") }}>
             <CardContent onClick={() => navTableOrders(tableInfo)}>
                 <Typography textAlign={"center"}>Table n°{tableInfo.number}</Typography>
             </CardContent>
