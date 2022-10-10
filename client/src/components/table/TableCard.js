@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { TableService } from "../../services/TableService";
 
 const TableCard = observer(({ tableInfo }) => {
   const navigate = useNavigate();
@@ -28,20 +28,7 @@ const TableCard = observer(({ tableInfo }) => {
     navigate("/" + tableInfo.tableOrderId + "/menu");
   }, [navigate, tableInfo]);
 
-  const openTablehandler = useCallback((path) => {
-    axios
-      .post(path, {
-        numberOfPersons: 4,
-      })
-      .then(function (response) {
-        console.log(response);
-      })
-      .then(function (error) {
-        console.log(error);
-      });
-  });
-
-  console.log(tableInfo)
+  console.log(tableInfo);
 
   return (
     <Card
@@ -61,13 +48,22 @@ const TableCard = observer(({ tableInfo }) => {
             <Button size="small" color={"info"} onClick={() => handleOrder()}>
               Order
             </Button>
-            <Button size="small" color={"error"}>
+            <Button
+              size="small"
+              color={"error"}
+              onClick={() => TableService.closeTable(tableInfo.tableOrderId)}
+            >
               {" "}
               Close{" "}
             </Button>
           </ButtonGroup>
         ) : (
-          <Button size="small" color={"success"} variant="contained">
+          <Button
+            size="small"
+            color={"success"}
+            variant="contained"
+            onClick={() => TableService.openTable(tableInfo.tableNumber, 4)}
+          >
             {" "}
             Open{" "}
           </Button>
