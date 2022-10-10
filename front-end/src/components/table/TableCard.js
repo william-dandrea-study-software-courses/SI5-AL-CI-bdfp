@@ -1,3 +1,4 @@
+
 import React, {useCallback} from "react";
 import { observer } from 'mobx-react-lite';
 import {Button, Card, CardActions, CardContent, Typography} from "@mui/material";
@@ -17,16 +18,22 @@ const TableCard = observer((
         }).then(resp => navigate("/takeOrder/" + resp.data._id));
     }, [navigate, tableInfo])
 
+    const navTableOrders = useCallback((info) => {
+        if (info.taken && info.tableOrderId != null) {
+            navigate(`/table-orders/${info.tableOrderId}`);
+        }
+    }, [navigate]);
+
     return (
-        <Card variant="outlined" style={{backgroundColor: (tableInfo.taken ? orange["A100"] : "")}}>
-            <CardContent>
+        <Card variant="outlined" style={{ backgroundColor: (tableInfo.taken ? orange[800] : "") }}>
+            <CardContent onClick={() => navTableOrders(tableInfo)}>
                 <Typography textAlign={"center"}>Table n°{tableInfo.number}</Typography>
             </CardContent>
             <CardActions>
                 <Button size="small" color={"success"} onClick={() => handleOpen()}>Open</Button>
                 <Button size="small" color={"error"}>Close</Button>
             </CardActions>
-        </Card>
+        </Card >
 
 
     )

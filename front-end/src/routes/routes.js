@@ -1,6 +1,8 @@
 import React from 'react'
+
 import {BrowserRouter, Route, Routes} from 'react-router-dom'
-import {PageTable, PageTakeOrder} from "../pages";
+import {PageTable, PageTakeOrder, PageTableOrders} from "../pages";
+
 
 
 export const AllRoutes = () =>
@@ -8,5 +10,6 @@ export const AllRoutes = () =>
         <Routes>
             <Route element={<PageTable/>} exact path="/"></Route>
             <Route element={<PageTakeOrder/>} exact path="/takeOrder/:id"></Route>
+            <Route element={<PageTableOrders />} exact path="/table-orders/:id"></Route>
         </Routes>
     </BrowserRouter>
