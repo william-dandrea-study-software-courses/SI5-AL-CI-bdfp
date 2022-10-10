@@ -3,5 +3,5 @@ import TableList from "./TableList";
 
 export {
     TableCard,
-    TableList
+    TableList,
 }
