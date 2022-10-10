@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { observer } from "mobx-react-lite";
 import {
   Button,
@@ -6,7 +6,13 @@ import {
   Card,
   CardActions,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Grid,
+  TextField,
   Typography,
 } from "@mui/material";
 import { blue } from "@mui/material/colors";
@@ -15,6 +21,8 @@ import { TableService } from "../../services/TableService";
 
 const TableCard = observer(({ tableInfo }) => {
   const navigate = useNavigate();
+
+  const [open, setOpen] = useState(false);
 
   const handleRedirect = useCallback(
     (path) => {
@@ -27,6 +35,14 @@ const TableCard = observer(({ tableInfo }) => {
   const handleOrder = useCallback(() => {
     navigate("/" + tableInfo.tableOrderId + "/menu");
   }, [navigate, tableInfo]);
+
+  const handlePopOpen = () => {
+    setOpen(true);
+  };
+
+  const handlePopClose = () => {
+    setOpen(false);
+  };
 
   console.log(tableInfo);
 
@@ -58,15 +74,47 @@ const TableCard = observer(({ tableInfo }) => {
             </Button>
           </ButtonGroup>
         ) : (
-          <Button
-            size="small"
-            color={"success"}
-            variant="contained"
-            onClick={() => TableService.openTable(tableInfo.tableNumber, 4)}
-          >
-            {" "}
-            Open{" "}
-          </Button>
+          <div>
+            <Button
+              size="small"
+              color={"success"}
+              variant="contained"
+              onClick={() => handlePopOpen()}
+            >
+              {" "}
+              Open{" "}
+            </Button>
+            <Dialog open={open} onClose={() => handlePopClose()}>
+              <DialogTitle> Open table </DialogTitle>
+              <DialogContent>
+                <DialogContentText>How much gest will eat ?</DialogContentText>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="guestsNumber"
+                  label="Number of guest"
+                  type="number"
+                  fullWidth
+                  variant="standard"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={() => handlePopClose()}>Cancel</Button>
+                <Button
+                  onClick={() => {
+                    const guests = parseInt(
+                      document.getElementById("guestsNumber").value
+                    );
+                    TableService.openTable(tableInfo.tableNumber, guests);
+                    handlePopClose();
+                    handleRedirect("/tables/" + tableInfo.tableNumber);
+                  }}
+                >
+                  Open table
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         )}
       </CardActions>
     </Card>

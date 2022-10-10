@@ -1,9 +1,12 @@
-import { Card, CardContent, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Grid, Card, CardContent, Typography } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { TableService } from "../../services";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import OrderCard from "./OrderCard";
 
 const TableDetails = () => {
+  const navigate = useNavigate();
   let { tableNumber } = useParams();
   const [tableInfo, setTableInfo] = useState([]);
 
@@ -17,13 +20,29 @@ const TableDetails = () => {
     });
   }, [setTableInfo, tableNumber]);
 
+  const handleGoBack = useCallback(() => {
+    navigate("/");
+  }, [navigate]);
+
   return (
-    <Card variant="outlined">
-      <CardContent>
-        <Typography textAlign={"center"}> Table n°{tableNumber} </Typography>
-        <Typography textAlign={"left"}>{tableInfo.statusOrder}</Typography>
-      </CardContent>
-    </Card>
+    <div>
+      <div style={{ position: "absolute" }} onClick={() => handleGoBack()}>
+        <ArrowBackIosIcon />
+      </div>
+      <Typography textAlign={"center"} marginBottom={2}>
+        Table n°{tableNumber};
+      </Typography>
+      <Typography textAlign={"center"} marginBottom={2}>
+        Liste des commandes
+      </Typography>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        {tableInfo.lines?.map((item) => (
+          <Grid item xs={6} key={item.itemShortName}>
+            <OrderCard orderInfo={item} />
+          </Grid>
+        ))}
+      </Grid>
+    </div>
   );
 };
 export default TableDetails;
