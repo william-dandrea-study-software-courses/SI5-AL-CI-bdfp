@@ -11,6 +11,9 @@ const OrderCard = observer(({ orderInfo }) => {
           {" "}
           {orderInfo.itemShortName} x {orderInfo.howManyItem}
         </Typography>
+        <Typography textAlign={"left"}>
+          {orderInfo.sentToPreparation ? "sent" : "pending"}
+        </Typography>
       </CardContent>
     </Card>
   );

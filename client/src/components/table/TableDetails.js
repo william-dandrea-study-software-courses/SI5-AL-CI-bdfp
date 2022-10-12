@@ -1,4 +1,4 @@
-import { Grid, Card, CardContent, Typography } from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TableService } from "../../services";
@@ -24,16 +24,25 @@ const TableDetails = () => {
     navigate("/");
   }, [navigate]);
 
+  const handleOrder = useCallback(() => {
+    navigate("/" + tableInfo.tableOrderId + "/menu");
+  }, [navigate, tableInfo]);
+
   return (
     <div>
       <div style={{ position: "absolute" }} onClick={() => handleGoBack()}>
         <ArrowBackIosIcon />
       </div>
       <Typography textAlign={"center"} marginBottom={2}>
-        Table n°{tableNumber};
+        Table n°{tableNumber}
       </Typography>
       <Typography textAlign={"center"} marginBottom={2}>
         Liste des commandes
+      </Typography>
+      <Typography textAlign={"right"}>
+        {tableInfo.statusOrder === "ANY_ORDER"
+          ? "no order placed"
+          : "order progressing"}
       </Typography>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {tableInfo.lines?.map((item) => (
@@ -42,6 +51,19 @@ const TableDetails = () => {
           </Grid>
         ))}
       </Grid>
+
+      <Button
+        variant="contained"
+        color={"success"}
+        onClick={() => handleOrder()}
+      >
+        {" "}
+        Place order
+      </Button>
+      <Button variant="outlined" color={"error"}>
+        {" "}
+        Bill{" "}
+      </Button>
     </div>
   );
 };
