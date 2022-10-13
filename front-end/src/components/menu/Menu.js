@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { observer } from "mobx-react-lite";
 import { MenuService, TableService } from "../../services";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Button } from "@mui/material";
+import { orange } from "@mui/material/colors";
 import MenuCard from "./MenuCard";
 import { useParams } from "react-router";
 import { useSnackbar } from "notistack";
@@ -92,7 +93,6 @@ const Menu = observer(({ tableId }) => {
         </>
 
     )
-}
-))
+});
 
 export default Menu;
