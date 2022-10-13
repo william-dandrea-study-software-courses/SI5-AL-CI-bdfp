@@ -5,6 +5,7 @@ import { Box, Button, Card, CardActions, CardContent, Typography, Modal, Input }
 import { orange } from "@mui/material/colors";
 import { useNavigate } from "react-router";
 import { TableService } from "../../services";
+import Bill from "./Bill";
 
 const style = {
     position: 'absolute',
@@ -24,13 +25,15 @@ const style = {
 const TableCard = observer((
     { tableInfo }) => {
     const navigate = useNavigate();
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const [openTableModal, setOpenTableModal] = React.useState(false);
+    const setTrueOpenTableModal = () => setOpenTableModal(true);
+    const setFalseOpenTableModal = () => setOpenTableModal(false);
+    const [closeTableModal, setCloseTableModal] = React.useState(false);
+    const setTrueCloseTableModal = () => setCloseTableModal(true);
+    const setFalseCloseTableModal = () => setCloseTableModal(false);
 
-    const validateOpen = useCallback(() => {
+    const openTable = useCallback(() => {
         const number = document.getElementById("customersCount");
-
         if (number !== null) {
             if (parseInt(number.value) > 0) {
                 TableService.openTable({
@@ -42,6 +45,14 @@ const TableCard = observer((
             }
         }
     }, [navigate, tableInfo])
+
+    const closeTable = useCallback(() => {
+        TableService.closeTable(tableInfo.tableOrderId)
+            .then(() => {
+                navigate("/");
+                setFalseCloseTableModal();
+            });
+    }, [navigate, tableInfo]);
 
     const navTableOrders = useCallback((info) => {
         if (info.taken && info.tableOrderId != null) {
@@ -56,19 +67,31 @@ const TableCard = observer((
             </CardContent>
             <CardActions>
                 {tableInfo.taken ? <Button size="small" color={"success"} onClick={() => navigate("/takeOrder/" + tableInfo.tableOrderId)}>Add orders</Button>
-                    : <Button size="small" color={"success"} onClick={handleOpen}>Open</Button>}
-                {tableInfo.taken ? <Button size="small" color={"error"}>Close</Button> : null}
+                    : <Button size="small" color={"success"} onClick={setTrueOpenTableModal}>Open</Button>}
+                {tableInfo.taken ? <Button size="small" color={"error"} onClick={setTrueCloseTableModal}>Close</Button> : null}
             </CardActions>
             <Modal
-                open={open}
-                onClose={handleClose}
+                open={openTableModal}
+                onClose={setFalseOpenTableModal}
             >
                 <Box sx={style}>
                     <Typography variant="h6" component="h2">
-                        Nombre de personne à la table :
+                        Nombre de personnes à la table :
                     </Typography>
-                    <Input id="customersCount" type="number" />
-                    <Button onClick={validateOpen}>Valider</Button>
+                    <Input type="number" id="customersCount" placeholder="Nombre de personnes" />
+                    <Button onClick={openTable}>Valider</Button>
+                </Box>
+            </Modal>
+            <Modal
+                open={closeTableModal}
+                onClose={setFalseCloseTableModal}
+            >
+                <Box sx={style}>
+                    <Typography variant="h6" component="h2">
+                        Facture de la table :
+                    </Typography>
+                    <Bill tableOrderId={tableInfo.tableOrderId} />
+                    <Button onClick={closeTable}>Payer</Button>
                 </Box>
             </Modal>
         </Card >
