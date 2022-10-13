@@ -1,22 +1,21 @@
-
-import React, {useCallback, useEffect, useState} from "react";
-import {observer} from "mobx-react-lite";
-import {MenuService, TableService} from "../../services";
-import {Button, Grid, Typography} from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { observer } from "mobx-react-lite";
+import { MenuService, TableService } from "../../services";
+import { Grid, Typography, Button } from "@mui/material";
+import { orange } from "@mui/material/colors";
 import MenuCard from "./MenuCard";
-import {useParams} from "react-router";
-import {useSnackbar} from "notistack";
-import {orange} from "@mui/material/colors";
-import {useNavigate} from "react-router-dom";
+import { useParams } from "react-router";
+import { useSnackbar } from "notistack";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-const Menu = observer((() => {
+const Menu = observer(({ tableId }) => {
     const [menuItems, setMenuItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [orderedItems, setOrderedItems] = useState([]);
-    const {id} = useParams();
+    const { id } = useParams();
+    const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
-    const {enqueueSnackbar} = useSnackbar();
-
 
     useEffect(() => {
         setIsLoading(true);
@@ -28,17 +27,17 @@ const Menu = observer((() => {
     const addToCart = useCallback((menuItem) => {
         let newItems = orderedItems;
         const index = orderedItems.findIndex(item => item.menuItemId === menuItem._id);
-        if (index >= 0){
-            newItems[index].howMany = newItems[index].howMany +1
+        if (index >= 0) {
+            newItems[index].howMany = newItems[index].howMany + 1
         } else {
             newItems.push({
                 menuItemId: menuItem._id,
                 menuItemShortName: menuItem.shortName,
-                howMany:1
+                howMany: 1
             });
         }
         setOrderedItems(newItems);
-        enqueueSnackbar(menuItem.shortName + " a été ajouté à la commande", {variant:"success"})
+        enqueueSnackbar(menuItem.shortName + " a été ajouté à la commande", { variant: "success" })
     }, [enqueueSnackbar, orderedItems]);
 
     const finalizeOrder = useCallback(() => {
@@ -48,16 +47,16 @@ const Menu = observer((() => {
         TableService.prepareTable(id)
             .then(() => enqueueSnackbar("La commande est partie en cuisine"))
             .then(() => navigate("/"));
-        }, [enqueueSnackbar, id, orderedItems]
+    }, [enqueueSnackbar, id, orderedItems]
     );
 
     const removeFromCart = useCallback((menuItem) => {
         let newItems = orderedItems;
         const index = orderedItems.findIndex(item => item.menuItemId === menuItem._id);
-        if (index >= 0){
+        if (index >= 0) {
             newItems[index].howMany > 1 ?
                 newItems[index].howMany = newItems[index].howMany - 1 :
-                newItems=newItems.filter(item => item.menuItemId !== menuItem._id);
+                newItems = newItems.filter(item => item.menuItemId !== menuItem._id);
         }
         setOrderedItems(newItems);
     }, [orderedItems, setOrderedItems]);
@@ -66,13 +65,13 @@ const Menu = observer((() => {
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             {menuItems.filter(x => x.category === category).map(x =>
                 <Grid key={x.id} item xs={4}>
-                    <MenuCard addInCart={addToCart} removeFromCart={removeFromCart} menuItem={x}/>
+                    <MenuCard addInCart={addToCart} removeFromCart={removeFromCart} menuItem={x} />
                 </Grid>
             )}
         </Grid>
-    , [addToCart, menuItems, removeFromCart]);
+        , [addToCart, menuItems, removeFromCart]);
 
-    return(
+    return (
         <>
             <Grid container direction={"column"}>
                 <Typography textAlign={"center"} marginBottom={2} fontSize={"5vw"}>Entrée</Typography>
@@ -85,17 +84,15 @@ const Menu = observer((() => {
                 {getItemByCategory('BEVERAGE')}
             </Grid>
             <Grid container position={"sticky"} bottom={"5%"} alignItems="center"
-                  justifyContent="center">
+                justifyContent="center">
                 <Grid item textAlign={"center"}
-                      style={{backgroundColor: orange["A100"], borderRadius:"5px", marginRight:"8px"}} xs={8}>
+                    style={{ backgroundColor: orange["A100"], borderRadius: "5px", marginRight: "8px" }} xs={8}>
                     <Button fullWidth color={"info"} onClick={() => finalizeOrder()}>Finaliser la commande</Button>
                 </Grid>
             </Grid>
         </>
 
     )
-    }
-))
-
+});
 
 export default Menu;
