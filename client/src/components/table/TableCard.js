@@ -43,6 +43,11 @@ const TableCard = observer(({ tableInfo }) => {
     setOpen(false);
   };
 
+  const handleCloseTable = useCallback(() => {
+    TableService.closeTable(tableInfo.tableOrderId);
+    // window.location.reload(true);
+  }, [tableInfo]);
+
   console.log(tableInfo);
 
   return (
@@ -66,7 +71,7 @@ const TableCard = observer(({ tableInfo }) => {
             <Button
               size="small"
               color={"error"}
-              onClick={() => TableService.closeTable(tableInfo.tableOrderId)}
+              onClick={() => handleCloseTable()}
             >
               {" "}
               Close{" "}

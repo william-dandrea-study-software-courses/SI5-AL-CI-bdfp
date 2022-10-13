@@ -64,7 +64,7 @@ const Menu = observer(() => {
   }, [cart]);
 
   const handleGoBack = useCallback(() => {
-    navigate("/");
+    navigate(-1);
   }, [navigate]);
 
   return (

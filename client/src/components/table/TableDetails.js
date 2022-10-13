@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, ButtonGroup, Grid, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TableService } from "../../services";
@@ -21,7 +21,7 @@ const TableDetails = () => {
   }, [setTableInfo, tableNumber]);
 
   const handleGoBack = useCallback(() => {
-    navigate("/");
+    navigate(-1);
   }, [navigate]);
 
   const handleOrder = useCallback(() => {
@@ -51,19 +51,24 @@ const TableDetails = () => {
           </Grid>
         ))}
       </Grid>
-
-      <Button
-        variant="contained"
-        color={"success"}
-        onClick={() => handleOrder()}
-      >
-        {" "}
-        Place order
-      </Button>
-      <Button variant="outlined" color={"error"}>
-        {" "}
-        Bill{" "}
-      </Button>
+      {tableInfo.isTaken ? (
+        <ButtonGroup>
+          <Button
+            variant="contained"
+            color={"success"}
+            onClick={() => handleOrder()}
+          >
+            {" "}
+            Place order
+          </Button>
+          <Button variant="outlined" color={"error"}>
+            {" "}
+            Bill{" "}
+          </Button>
+        </ButtonGroup>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
