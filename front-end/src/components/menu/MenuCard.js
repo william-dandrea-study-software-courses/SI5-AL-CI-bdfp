@@ -1,32 +1,19 @@
 import {observer} from "mobx-react-lite";
-import {Card, CardContent, Typography} from "@mui/material";
-import {useCallback} from "react";
-import {TableService} from "../../services";
-import {useParams} from "react-router";
-import {useSnackbar} from "notistack";
+import {Button, Card, CardActions, CardContent, Typography} from "@mui/material";
+import React from "react";
 
 
-const MenuCard = observer(({menuItem}) => {
-    const {id} = useParams();
-    const {enqueueSnackbar} = useSnackbar();
-    
-    const handleAddItem = useCallback(() => {
-            TableService.addMenuItemToTableOrder(
-                {
-                    menuItemId: menuItem._id,
-                    menuItemShortName: menuItem.shortName,
-                    howMany:1
-                }, id)
-                .then(() => enqueueSnackbar(menuItem.shortName + " a été ajouté à la commande", {variant:"success"}))
-        }, [enqueueSnackbar, id, menuItem]
-    );
+const MenuCard = observer(({menuItem, addInCart, removeFromCart}) => {
 
     return(
-        <Card onClick={() =>
-            handleAddItem()} variant={"outlined"}>
+        <Card variant={"outlined"}>
             <CardContent>
                 <Typography textAlign={"center"}>{menuItem.shortName}</Typography>
             </CardContent>
+            <CardActions>
+                <Button size="small" color={"success"} onClick={() => addInCart(menuItem)}>Add</Button>
+                <Button size="small" color={"error"} onClick={() => removeFromCart(menuItem)}>Remove</Button>
+            </CardActions>
         </Card>
     )
     }

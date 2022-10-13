@@ -9,8 +9,10 @@ const openTable = (startOrderingDto) => axios.post(tableOrdersUrl, startOrdering
 
 const addMenuItemToTableOrder = (menuItemDto, tableId) => axios.post(tableOrdersUrl + "/" + tableId, menuItemDto )
 
+const prepareTable = (tableOrderId) => axios.post(tableOrdersUrl + "/" + tableOrderId + "/prepare");
 export const TableService = {
     getAllTables,
     openTable,
-    addMenuItemToTableOrder
+    addMenuItemToTableOrder,
+    prepareTable
 }
