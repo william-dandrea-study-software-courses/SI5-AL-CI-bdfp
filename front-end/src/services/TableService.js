@@ -13,10 +13,13 @@ const getTableOrdersById = (id) => axios.get(tableOrdersUrl + "/" + id);
 
 const closeTable = (id) => axios.post(tableOrdersUrl + "/" + id + "/bill");
 
+const prepareTable = (tableOrderId) => axios.post(tableOrdersUrl + "/" + tableOrderId + "/prepare");
+
 export const TableService = {
     getAllTables,
     openTable,
     addMenuItemToTableOrder,
     getTableOrdersById,
-    closeTable
+    closeTable,
+    prepareTable
 }
