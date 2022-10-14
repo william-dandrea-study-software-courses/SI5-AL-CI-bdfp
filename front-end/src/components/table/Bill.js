@@ -4,7 +4,6 @@ import { MenuService, TableService } from '../../services';
 
 const Bill = observer(({ tableOrderId }) => {
     const [allOrders, setAllOrders] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
     const [allPrices, setAllPrices] = useState({});
 
@@ -17,10 +16,8 @@ const Bill = observer(({ tableOrderId }) => {
     };
 
     useEffect(() => {
-        setIsLoading(true);
         TableService.getTableOrdersById(tableOrderId)
             .then(async resp => {
-                setIsLoading(false);
                 setAllOrders(resp.data.lines);
                 let orders = resp.data.lines;
                 let prices = {};
@@ -34,13 +31,13 @@ const Bill = observer(({ tableOrderId }) => {
                 setAllPrices(prices);
                 setTotalPrice(totalPrice);
             });
-    }, [setAllOrders, setIsLoading, setAllPrices, setTotalPrice, tableOrderId]);
+    }, [setAllOrders, setAllPrices, setTotalPrice, tableOrderId]);
 
     return (
         <div>
             {
-                allOrders.map(x =>
-                    <div style={{ "display": "flex", "justifyContent": "space-between" }}>
+                allOrders.map((x, index) =>
+                    <div style={{ "display": "flex", "justifyContent": "space-between" }} key={index}>
                         <div>{x.howMany} x {x.item.shortName} ({allPrices[x.item._id]} €)</div>
                         <div>{allPrices[x.item._id] * x.howMany} €</div>
                     </div>

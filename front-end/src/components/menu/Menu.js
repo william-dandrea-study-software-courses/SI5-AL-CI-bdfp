@@ -10,18 +10,15 @@ import { useSnackbar } from "notistack";
 
 const Menu = observer(({ tableId }) => {
     const [menuItems, setMenuItems] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+
     const [orderedItems, setOrderedItems] = useState([]);
     const { id } = useParams();
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
 
     useEffect(() => {
-        setIsLoading(true);
-        MenuService.getAllMenu()
-            .then(resp => setMenuItems(resp.data))
-            .finally(() => setIsLoading(false));
-    }, [setIsLoading, setMenuItems])
+        MenuService.getAllMenu().then(resp => setMenuItems(resp.data));
+    }, [setMenuItems])
 
     const addToCart = useCallback((menuItem) => {
         let newItems = orderedItems;
@@ -66,8 +63,8 @@ const Menu = observer(({ tableId }) => {
 
     const getItemByCategory = useCallback((category) =>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            {menuItems.filter(x => x.category === category).map(x =>
-                <Grid key={x.id} item xs={4}>
+            {menuItems.filter(x => x.category === category).map((x, index) =>
+                <Grid key={index} item xs={4}>
                     <MenuCard addInCart={addToCart} removeFromCart={removeFromCart} menuItem={x} />
                 </Grid>
             )}

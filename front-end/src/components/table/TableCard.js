@@ -1,5 +1,5 @@
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { observer } from 'mobx-react-lite';
 import { Box, Button, Card, CardActions, CardContent, Typography, Modal, Input } from "@mui/material";
 import { orange } from "@mui/material/colors";
@@ -51,7 +51,7 @@ const TableCard = observer((props) => {
                 setFalseCloseTableModal();
                 props.handleChange();
             });
-    }, [props.tableInfo]);
+    }, [props]);
 
     const navTableOrders = useCallback((info) => {
         if (info.taken && info.tableOrderId != null) {
