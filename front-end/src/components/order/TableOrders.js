@@ -8,7 +8,7 @@ import React from 'react';
 import OrderCard from './OrderCard';
 
 const TableOrders = observer(() => {
-    const [TableOrders, setTableOrders] = useState({});
+    const [tableOrders, setTableOrders] = useState({});
     const [isOrdersLoading, setIsOrdersLoading] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
@@ -25,9 +25,9 @@ const TableOrders = observer(() => {
             <div style={{ position: "absolute" }} onClick={() => navigate("/")}>
                 <ArrowBackIosIcon />
             </div>
-            < Typography textAlign={"center"} marginBottom={2}>Liste des commandes de la table n°{TableOrders.tableNumber}</Typography>
+            < Typography textAlign={"center"} marginBottom={2}>Liste des commandes de la table n°{tableOrders.tableNumber}</Typography>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                {TableOrders.lines?.map(x =>
+                {tableOrders.lines?.map(x =>
                     <Grid item xs={6}>
                         <OrderCard orderInfo={x} />
                     </Grid>

@@ -7,7 +7,6 @@ import { orange } from "@mui/material/colors";
 import MenuCard from "./MenuCard";
 import { useParams } from "react-router";
 import { useSnackbar } from "notistack";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
 const Menu = observer(({ tableId }) => {
     const [menuItems, setMenuItems] = useState([]);
@@ -40,15 +39,19 @@ const Menu = observer(({ tableId }) => {
         enqueueSnackbar(menuItem.shortName + " a été ajouté à la commande", { variant: "success" })
     }, [enqueueSnackbar, orderedItems]);
 
-    const finalizeOrder = useCallback(() => {
-        orderedItems.forEach(item => {
-            TableService.addMenuItemToTableOrder(item, id)
-        })
-        TableService.prepareTable(id)
-            .then(() => enqueueSnackbar("La commande est partie en cuisine"))
-            .then(() => navigate("/"));
-    }, [enqueueSnackbar, id, orderedItems]
-    );
+    function delay(time) {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    const finalizeOrder = useCallback(async () => {
+        for (const item of orderedItems) {
+            await TableService.addMenuItemToTableOrder(item, id);
+        }
+        TableService.prepareTable(id).then(() => {
+            enqueueSnackbar("La commande est partie en cuisine");
+            delay(1000).then(() => navigate("/"));
+        });
+    }, [enqueueSnackbar, id, orderedItems, navigate]);
 
     const removeFromCart = useCallback((menuItem) => {
         let newItems = orderedItems;

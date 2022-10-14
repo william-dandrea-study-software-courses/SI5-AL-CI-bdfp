@@ -1,5 +1,5 @@
 
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { observer } from 'mobx-react-lite';
 import { Box, Button, Card, CardActions, CardContent, Typography, Modal, Input } from "@mui/material";
 import { orange } from "@mui/material/colors";
@@ -22,8 +22,7 @@ const style = {
     flexDirection: 'column',
 };
 
-const TableCard = observer((
-    { tableInfo }) => {
+const TableCard = observer((props) => {
     const navigate = useNavigate();
     const [openTableModal, setOpenTableModal] = React.useState(false);
     const setTrueOpenTableModal = () => setOpenTableModal(true);
@@ -37,22 +36,22 @@ const TableCard = observer((
         if (number !== null) {
             if (parseInt(number.value) > 0) {
                 TableService.openTable({
-                    tableNumber: tableInfo.number,
+                    tableNumber: props.tableInfo.number,
                     customersCount: parseInt(number.value)
                 }).then(resp => navigate("/takeOrder/" + resp.data._id));
             } else {
                 alert("Veuillez saisir un nombre de personnes valide");
             }
         }
-    }, [navigate, tableInfo])
+    }, [navigate, props.tableInfo])
 
     const closeTable = useCallback(() => {
-        TableService.closeTable(tableInfo.tableOrderId)
+        TableService.closeTable(props.tableInfo.tableOrderId)
             .then(() => {
-                navigate("/");
                 setFalseCloseTableModal();
+                props.handleChange();
             });
-    }, [navigate, tableInfo]);
+    }, [props.tableInfo]);
 
     const navTableOrders = useCallback((info) => {
         if (info.taken && info.tableOrderId != null) {
@@ -61,14 +60,14 @@ const TableCard = observer((
     }, [navigate]);
 
     return (
-        <Card variant="outlined" style={{ backgroundColor: (tableInfo.taken ? orange["A100"] : "") }}>
-            <CardContent onClick={() => navTableOrders(tableInfo)}>
-                <Typography textAlign={"center"}>Table n°{tableInfo.number} </Typography>
+        <Card variant="outlined" style={{ backgroundColor: (props.tableInfo.taken ? orange["A100"] : "") }}>
+            <CardContent onClick={() => navTableOrders(props.tableInfo)}>
+                <Typography textAlign={"center"}>Table n°{props.tableInfo.number} </Typography>
             </CardContent>
             <CardActions>
-                {tableInfo.taken ? <Button size="small" color={"success"} onClick={() => navigate("/takeOrder/" + tableInfo.tableOrderId)}>Add orders</Button>
+                {props.tableInfo.taken ? <Button size="small" color={"success"} onClick={() => navigate("/takeOrder/" + props.tableInfo.tableOrderId)}>Add orders</Button>
                     : <Button size="small" color={"success"} onClick={setTrueOpenTableModal}>Open</Button>}
-                {tableInfo.taken ? <Button size="small" color={"error"} onClick={setTrueCloseTableModal}>Close</Button> : null}
+                {props.tableInfo.taken ? <Button size="small" color={"error"} onClick={setTrueCloseTableModal}>Close</Button> : null}
             </CardActions>
             <Modal
                 open={openTableModal}
@@ -90,7 +89,7 @@ const TableCard = observer((
                     <Typography variant="h6" component="h2">
                         Facture de la table :
                     </Typography>
-                    <Bill tableOrderId={tableInfo.tableOrderId} />
+                    <Bill tableOrderId={props.tableInfo.tableOrderId} />
                     <Button onClick={closeTable}>Payer</Button>
                 </Box>
             </Modal>

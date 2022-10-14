@@ -13,7 +13,11 @@ const TableList = observer(() => {
         TableService.getAllTables()
             .then(resp => setAllTables(resp.data))
             .finally(() => setIsAllTablesLoading(false));
-    }, [setAllTables, setIsAllTablesLoading]);
+    }, [setAllTables, setIsAllTablesLoading,]);
+
+    const handleChange = () => {
+        TableService.getAllTables().then(resp => setAllTables(resp.data));
+    }
 
     return (
         <div>
@@ -21,7 +25,7 @@ const TableList = observer(() => {
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 {allTables.map(x =>
                     <Grid item xs={6}>
-                        <TableCard tableInfo={x} />
+                        <TableCard tableInfo={x} handleChange={handleChange} />
                     </Grid>
                 )}
             </Grid>
