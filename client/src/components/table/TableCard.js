@@ -17,11 +17,14 @@ import {
 import { blue } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
 import { TableService } from "../../services/TableService";
+import Badge from "@mui/material/Badge";
+import MailIcon from "@mui/icons-material/Mail";
 
 const TableCard = observer(({ tableInfo }) => {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
+  const [tableTaken, setTableTaken] = useState(false);
 
   const handleRedirect = useCallback(
     (path) => {
@@ -44,9 +47,10 @@ const TableCard = observer(({ tableInfo }) => {
   };
 
   const handleCloseTable = useCallback(() => {
-    TableService.closeTable(tableInfo.tableOrderId);
-    // window.location.reload(true);
-  }, [tableInfo]);
+    TableService.closeTable(tableInfo.tableOrderId).then(() => {
+      setTableTaken(false);
+    });
+  }, [tableInfo.tableOrderId]);
 
   console.log(tableInfo);
 
@@ -91,7 +95,7 @@ const TableCard = observer(({ tableInfo }) => {
             <Dialog open={open} onClose={() => handlePopClose()}>
               <DialogTitle> Open table </DialogTitle>
               <DialogContent>
-                <DialogContentText>How much gest will eat ?</DialogContentText>
+                <DialogContentText>How much guest will eat ?</DialogContentText>
                 <TextField
                   autoFocus
                   margin="dense"
@@ -110,6 +114,7 @@ const TableCard = observer(({ tableInfo }) => {
                       document.getElementById("guestsNumber").value
                     );
                     TableService.openTable(tableInfo.tableNumber, guests);
+                    setTableTaken(true);
                     handlePopClose();
                     handleRedirect("/tables/" + tableInfo.tableNumber);
                   }}
@@ -119,6 +124,17 @@ const TableCard = observer(({ tableInfo }) => {
               </DialogActions>
             </Dialog>
           </div>
+        )}
+        {tableInfo.statusOrder === "ORDER_READY_TO_BE_DELIVERED_TO_TABLE" ? (
+          <Badge
+            badgeContent={1}
+            color="error"
+            onClick={() => handleRedirect(`/tables/${tableInfo.tableNumber}`)}
+          >
+            <MailIcon color="action" />
+          </Badge>
+        ) : (
+          ""
         )}
       </CardActions>
     </Card>

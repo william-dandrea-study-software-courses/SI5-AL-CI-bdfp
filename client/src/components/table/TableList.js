@@ -1,8 +1,9 @@
 import { Grid, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import TableCard from "./TableCard";
 import { TableService } from "../../services/TableService";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 
 const TableList = observer(() => {
   const [allTables, setAllTables] = useState([]);
@@ -15,8 +16,15 @@ const TableList = observer(() => {
       .finally(() => setIsAllTableLoading(false));
   }, [setAllTables, setIsAllTableLoading]);
 
+  const handleRefresh = useCallback(() => {
+    window.location.reload(true);
+  }, []);
+
   return (
     <div>
+      <div style={{ position: "absolute" }} onClick={() => handleRefresh()}>
+        <AutorenewIcon />
+      </div>
       <Typography textAlign={"center"} marginBottom={2}>
         Liste des tables
       </Typography>

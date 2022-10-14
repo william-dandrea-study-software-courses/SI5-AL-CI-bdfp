@@ -1,8 +1,10 @@
+/* eslint-disable no-undef */
 import { Button, ButtonGroup, Grid, Typography } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TableService } from "../../services";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
 import OrderCard from "./OrderCard";
 
 const TableDetails = () => {
@@ -28,10 +30,23 @@ const TableDetails = () => {
     navigate("/" + tableInfo.tableOrderId + "/menu");
   }, [navigate, tableInfo]);
 
+  const handleServed = useCallback(() => {
+    tableInfo.readyToBeServedPreparationsId?.map((id) => {
+      TableService.serveTable(id);
+    });
+  }, [tableInfo]);
+
+  const handleRefresh = useCallback(() => {
+    window.location.reload(true);
+  }, []);
+
   return (
     <div>
-      <div style={{ position: "absolute" }} onClick={() => handleGoBack()}>
+      <div style={{ position: "left" }} onClick={() => handleGoBack()}>
         <ArrowBackIosIcon />
+      </div>
+      <div style={{ position: "right" }} onClick={() => handleRefresh()}>
+        <AutorenewIcon />
       </div>
       <Typography textAlign={"center"} marginBottom={2}>
         Table n°{tableNumber}
@@ -40,9 +55,11 @@ const TableDetails = () => {
         Liste des commandes
       </Typography>
       <Typography textAlign={"right"}>
-        {tableInfo.statusOrder === "ANY_ORDER"
-          ? "no order placed"
-          : "order progressing"}
+        {tableInfo.statusOrder === "ORDER_READY_TO_BE_DELIVERED_TO_TABLE"
+          ? "ready to be served"
+          : tableInfo.statusOrder === "ORDER_IN_PROGRESS"
+          ? "order in preparation"
+          : "no order"}
       </Typography>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {tableInfo.lines?.map((item) => (
@@ -66,6 +83,18 @@ const TableDetails = () => {
             Bill{" "}
           </Button>
         </ButtonGroup>
+      ) : (
+        ""
+      )}
+      {tableInfo.statusOrder === "ORDER_READY_TO_BE_DELIVERED_TO_TABLE" ? (
+        <Button
+          variant="contained"
+          color={"error"}
+          onClick={() => handleServed()}
+        >
+          {" "}
+          Serve{" "}
+        </Button>
       ) : (
         ""
       )}

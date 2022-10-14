@@ -1,4 +1,4 @@
-import { TableCard, TableList, TableDetails } from "./table";
+import { TableCard, TableList, TableDetails, OrderCard } from "./table";
 import { Item, Menu } from "./menu";
 
-export { TableCard, TableList, TableDetails, Item, Menu };
+export { TableCard, TableList, TableDetails, OrderCard, Item, Menu };

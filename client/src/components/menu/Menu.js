@@ -61,7 +61,7 @@ const Menu = observer(() => {
     OrderService.createOrder(tableOrderId, cart).then((result) => {
       navigate("/");
     });
-  }, [cart]);
+  }, [cart, navigate, tableOrderId]);
 
   const handleGoBack = useCallback(() => {
     navigate(-1);
