@@ -9,7 +9,7 @@ const openTable = (tableNumber, people) => {
 
   const urlOpen = `http://localhost:5301/table-resume/${tableNumber}/open-table`;
   console.log(body);
-  axios.post(urlOpen, body);
+  return axios.post(urlOpen, body);
 };
 
 const serveTable = (preparationId) => {
@@ -19,7 +19,7 @@ const serveTable = (preparationId) => {
 
 const closeTable = (tableOrderId) => {
   const urlClose = `http://localhost:5301/table-resume/${tableOrderId}/pay-and-close-table`;
-  axios.post(urlClose);
+  return axios.post(urlClose);
 };
 
 export const TableService = {
