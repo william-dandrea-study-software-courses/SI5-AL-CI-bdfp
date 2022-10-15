@@ -17,7 +17,7 @@ const TableList = observer(() => {
 
     return (
         <div>
-            <Typography textAlign={"center"} marginBottom={2}>Liste des tables</Typography>
+            <Typography textAlign={"center"} marginBottom={2}>Tables list</Typography>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 {allTables.map((x, index) =>
                     <Grid item xs={6} key={index}>

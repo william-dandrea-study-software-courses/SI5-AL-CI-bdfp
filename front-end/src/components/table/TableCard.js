@@ -75,10 +75,10 @@ const TableCard = observer((props) => {
             >
                 <Box sx={style}>
                     <Typography variant="h6" component="h2">
-                        Nombre de personnes à la table :
+                        Number of people at the table :
                     </Typography>
-                    <Input type="number" id="customersCount" placeholder="Nombre de personnes" />
-                    <Button onClick={openTable}>Valider</Button>
+                    <Input type="number" id="customersCount" placeholder="Number of people" />
+                    <Button onClick={openTable}>Confirm</Button>
                 </Box>
             </Modal>
             <Modal
@@ -87,10 +87,10 @@ const TableCard = observer((props) => {
             >
                 <Box sx={style}>
                     <Typography variant="h6" component="h2">
-                        Facture de la table :
+                        Table's bill :
                     </Typography>
                     <Bill tableOrderId={props.tableInfo.tableOrderId} />
-                    <Button onClick={closeTable}>Payer</Button>
+                    <Button onClick={closeTable}>Pay</Button>
                 </Box>
             </Modal>
         </Card >
