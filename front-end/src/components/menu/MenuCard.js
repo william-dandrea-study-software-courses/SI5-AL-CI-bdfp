@@ -1,19 +1,12 @@
-import {observer} from "mobx-react-lite";
-import {Button, Card, CardActions, CardContent, Typography} from "@mui/material";
-import React, {useCallback, useState} from "react";
+import { observer } from "mobx-react-lite";
+import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+import React, { useState } from "react";
 
 
-const MenuCard = observer(({menuItem, addInCart, removeFromCart}) => {
-
+const MenuCard = observer(({ menuItem, addInCart, removeFromCart }) => {
     const [itemsNumber, setItemsNumber] = useState(0);
 
-    const canBeRemoved = useCallback(() => {
-        if (itemsNumber > 0) {
-            <Button size="small" color={"error"} onClick={() => removeFromCart(menuItem, setItemsNumber)}>Remove</Button>
-        }
-    }, [itemsNumber, menuItem, removeFromCart]);
-
-    return(
+    return (
         <Card variant={"outlined"}>
             <CardContent>
                 <Typography textAlign={"center"}>{menuItem.shortName}</Typography>
@@ -23,13 +16,13 @@ const MenuCard = observer(({menuItem, addInCart, removeFromCart}) => {
                 <Button size="small" color={"success"} onClick={() => addInCart(menuItem, setItemsNumber)}>Add</Button>
                 {(itemsNumber > 0) ?
                     <Button size="small" color={"error"} onClick={() => removeFromCart(menuItem, setItemsNumber)}>Remove</Button>
-                :
-                    <div/>
+                    :
+                    <div />
                 }
             </CardActions>
         </Card>
     )
-    }
+}
 )
 
 export default MenuCard;

@@ -35,7 +35,7 @@ const Menu = observer(() => {
             setHowMany(1);
         }
         setOrderedItems(newItems);
-        enqueueSnackbar(menuItem.shortName + " has been added to the order", { variant: "success" })
+        enqueueSnackbar(menuItem.shortName + " has been added to the order", { variant: "success" });
     }, [enqueueSnackbar, orderedItems]);
 
     function delay(time) {
@@ -63,11 +63,7 @@ const Menu = observer(() => {
             enqueueSnackbar(menuItem.shortName + " has been removed from the order", { variant: "error" })
         }
         setOrderedItems(newItems);
-    }, [orderedItems, setOrderedItems]);
-
-    const countItemInCart = (menuItem) => {
-        return orderedItems.filter(x => x.menuItemId === menuItem._id)[0]?.howMany
-    }
+    }, [orderedItems, setOrderedItems, enqueueSnackbar]);
 
     const getItemByCategory = useCallback((category) =>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -81,7 +77,7 @@ const Menu = observer(() => {
                 </Grid>
             )}
         </Grid>
-        , [orderedItems, addToCart, menuItems, removeFromCart]);
+        , [addToCart, menuItems, removeFromCart]);
 
     return (
         <>

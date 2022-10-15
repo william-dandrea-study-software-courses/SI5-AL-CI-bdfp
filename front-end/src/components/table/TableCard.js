@@ -6,6 +6,7 @@ import { orange } from "@mui/material/colors";
 import { useNavigate } from "react-router";
 import { TableService } from "../../services";
 import Bill from "./Bill";
+import { useSnackbar } from "notistack";
 
 const style = {
     position: 'absolute',
@@ -30,6 +31,7 @@ const TableCard = observer((props) => {
     const [closeTableModal, setCloseTableModal] = React.useState(false);
     const setTrueCloseTableModal = () => setCloseTableModal(true);
     const setFalseCloseTableModal = () => setCloseTableModal(false);
+    const { enqueueSnackbar } = useSnackbar();
 
     const openTable = useCallback(() => {
         const number = document.getElementById("customersCount");
@@ -50,8 +52,9 @@ const TableCard = observer((props) => {
             .then(() => {
                 setFalseCloseTableModal();
                 props.handleChange();
+                enqueueSnackbar("Table n°" + props.tableInfo.number + " has been paid and closed", { variant: "success" });
             });
-    }, [props]);
+    }, [props, enqueueSnackbar]);
 
     const navTableOrders = useCallback((info) => {
         if (info.taken && info.tableOrderId != null) {

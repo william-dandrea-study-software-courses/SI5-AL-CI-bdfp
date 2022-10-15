@@ -1,10 +1,13 @@
 import React from "react";
-import {TableList} from "../components";
+import { TableList } from "../components";
+import { SnackbarProvider } from "notistack";
 
 const PageTable = () => {
 
-    return(
-        <TableList/>
+    return (
+        <SnackbarProvider>
+            <TableList />
+        </SnackbarProvider>
     )
 }
 
