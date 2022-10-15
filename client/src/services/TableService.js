@@ -14,7 +14,7 @@ const openTable = (tableNumber, people) => {
 
 const serveTable = (preparationId) => {
   const urlServe = `http://localhost:5301/table-resume/${preparationId}/served`;
-  axios.post(urlServe);
+  return axios.post(urlServe);
 };
 
 const closeTable = (tableOrderId) => {

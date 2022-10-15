@@ -3,8 +3,6 @@ import { observer } from "mobx-react-lite";
 import React from "react";
 
 const OrderCard = observer(({ orderInfo, tableInfo }) => {
-    console.log(tableInfo)
-    console.log(orderInfo);
     return (
         <Card>
             <CardContent>
