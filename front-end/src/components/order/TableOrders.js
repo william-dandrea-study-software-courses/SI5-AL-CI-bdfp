@@ -15,7 +15,6 @@ const TableOrders = observer(() => {
     const navigate = useNavigate();
 
     const fetchPreparations = useCallback(async () => {
-        console.log('Fetching preparations...');
         let listPreparations = [];
         await KitchenService.getPreparationsReady(tableNumber).then(resp => {
             listPreparations = resp.data;
@@ -36,7 +35,7 @@ const TableOrders = observer(() => {
     }, [tableNumber, setPreparedItems]);
 
     useEffect(() => {
-        setInterval(fetchPreparations, 10000);
+        fetchPreparations();
     }, [fetchPreparations]);
 
     const handleChange = (preparationsId) => {
