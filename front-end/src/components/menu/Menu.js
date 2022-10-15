@@ -72,9 +72,8 @@ const Menu = observer(() => {
     const getItemByCategory = useCallback((category) =>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             {menuItems.filter(x => x.category === category).map(x =>
-                <Grid key={x.id} item xs={4}>
+                <Grid key={x.id} item xs={6}>
                     <MenuCard
-
                         addInCart={addToCart}
                         removeFromCart={removeFromCart}
                         menuItem={x} />

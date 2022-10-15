@@ -17,7 +17,7 @@ const MenuCard = observer(({menuItem, addInCart, removeFromCart}) => {
         <Card variant={"outlined"}>
             <CardContent>
                 <Typography textAlign={"center"}>{menuItem.shortName}</Typography>
-                <Typography textAlign={"center"}>Nb dans la commande : {itemsNumber}</Typography>
+                <Typography textAlign={"center"}>In cart : {itemsNumber}</Typography>
             </CardContent>
             <CardActions>
                 <Button size="small" color={"success"} onClick={() => addInCart(menuItem, setItemsNumber)}>Add</Button>
