@@ -58,7 +58,7 @@ const TableCard = observer((props) => {
 
     const navTableOrders = useCallback((info) => {
         if (info.taken && info.tableOrderId != null) {
-            navigate(`/table-orders/${info.tableOrderId}`);
+            navigate(`/table-orders/${info.number}`);
         }
     }, [navigate]);
 

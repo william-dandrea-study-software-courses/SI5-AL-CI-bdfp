@@ -1,14 +1,13 @@
-import {Menu} from "../components";
-import {SnackbarProvider} from "notistack";
+import { Menu } from "../components";
+import { SnackbarProvider } from "notistack";
 
 
 const PageTakeOrder = () => {
 
     return (
         <SnackbarProvider>
-            <Menu/>
+            <Menu />
         </SnackbarProvider>
-
     )
 }
 
