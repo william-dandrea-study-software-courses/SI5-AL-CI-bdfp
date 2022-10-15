@@ -1,15 +1,10 @@
 import {Injectable} from '@nestjs/common';
 import {OrderItem, StatusTableOrder, TableDetails} from "../schemas/table-details.schema";
 import {HttpService} from "@nestjs/axios";
-import {
-    OrderingItemDto,
-    OrderingLineDto,
-    PreparationDto,
-    PreparedItemDto
-} from "../../shared/dto/table-order-server.dto";
 import {DiningServerService} from "../../shared/services/dining/dining-server.service";
 import {KitchenServerService} from "../../shared/services/kitchen/kitchen-server.service";
-import {StatePreparation} from "../../shared/dto/kitchen-server.dto";
+import {Preparation, StatePreparation} from "../../shared/dto/kitchen-server.dto";
+import {ItemTableDto, PreparationTableDto, StatusPreparationTable} from "../dto/preparation-table.dto";
 
 @Injectable()
 export class TableResumeService {
@@ -26,7 +21,6 @@ export class TableResumeService {
 
     public async listTables(): Promise<TableDetails[]> {
 
-
         return new Promise<TableDetails[]>(async (resolve, reject) => {
             const tableDetails: TableDetails[] = []
 
@@ -38,7 +32,12 @@ export class TableResumeService {
                     const tableOrderId: string | null = table.tableOrderId;
                     let isOrderPaid: boolean = false;
                     let lines: OrderItem[] = []
-                    let readyToBeServedPreparationsId: string[] = []
+                    const preparations: Preparation[] = []
+                    const internPreparationsReadyToBeServed: Preparation[] = []
+                    const internPreparationsStarted: Preparation[] = []
+
+
+                    let preparationsTable: PreparationTableDto[] = []
 
 
 
@@ -54,29 +53,41 @@ export class TableResumeService {
                                 statusOrder = StatusTableOrder.ORDER_NOT_SENT_TO_KITCHEN;
                             }
 
-                            await this.kitchenService.getPreparations(tableNumber, StatePreparation.PREPARATION_STARTED).then(preparations => {
-                                if (preparations.length > 0) {
+                            await this.kitchenService.getPreparations(tableNumber, StatePreparation.PREPARATION_STARTED).then(prepas => {
+                                if (prepas.length > 0) {
                                     statusOrder = StatusTableOrder.ORDER_IN_PROGRESS;
                                 }
+                                preparations.push(...prepas);
+                                internPreparationsStarted.push(...prepas);
                             }).catch(error => reject(error));
 
-                            await this.kitchenService.getPreparations(tableNumber, StatePreparation.READY_TO_BE_SERVED).then(preparations => {
-                                if (preparations.length > 0) {
+                            await this.kitchenService.getPreparations(tableNumber, StatePreparation.READY_TO_BE_SERVED).then(prepas => {
+                                if (prepas.length > 0) {
                                     statusOrder = StatusTableOrder.ORDER_READY_TO_BE_DELIVERED_TO_TABLE
-                                    preparations.forEach(prep => {
-                                        readyToBeServedPreparationsId.push(prep._id)
-                                    })
                                 }
+                                preparations.push(...prepas)
+                                internPreparationsReadyToBeServed.push(...prepas)
                             }).catch(error => reject(error));
 
                             if (isOrderPaid) {
                                 statusOrder = StatusTableOrder.ANY_ORDER
                             }
 
+                            preparations.forEach(p => {
+                                const isOrderInProgress: boolean = internPreparationsStarted.findIndex(v => v._id === p._id) != -1
+                                const isOrderReadyToBeServed: boolean = internPreparationsReadyToBeServed.findIndex(v => v._id === p._id) != -1
+
+                                const preparationIdValue = p._id;
+                                const statusValue = (p.takenForServiceAt ? StatusPreparationTable.SERVED : (isOrderReadyToBeServed ? StatusPreparationTable.READY_TO_BE_SERVED : StatusPreparationTable.IN_PROGRESS));
+
+                                const itemsTable: ItemTableDto[] = p.preparedItems.map(pi => new ItemTableDto(pi._id, pi.shortName));
+
+                                preparationsTable.push(new PreparationTableDto(preparationIdValue, statusValue, itemsTable))
+                            })
 
                         }).catch(error => reject(error));
                     }
-                    tableDetails.push(new TableDetails(tableNumber, statusOrder, isTaken, isOrderPaid, lines, tableOrderId, readyToBeServedPreparationsId))
+                    tableDetails.push(new TableDetails(tableNumber, statusOrder, isTaken, isOrderPaid, tableOrderId, preparationsTable, lines))
                 }
             }).catch(error => reject(error))
 

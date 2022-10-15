@@ -64,7 +64,7 @@ const TableDetails = () => {
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         {tableInfo.lines?.map((item) => (
           <Grid item xs={6} key={item.itemShortName}>
-            <OrderCard orderInfo={item} />
+            <OrderCard orderInfo={item} tableInfo={tableInfo} />
           </Grid>
         ))}
       </Grid>

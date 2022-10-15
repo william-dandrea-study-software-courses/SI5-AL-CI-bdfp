@@ -2,20 +2,22 @@ import { Injectable } from '@nestjs/common';
 import {HttpService} from "@nestjs/axios";
 import {URL_MENU_SERVICE} from "../../../config";
 import {CategoryEnum, MenuItemServerDto} from "../../dto/menu-item-server.dto";
+import {ServerRequestException} from "../../exceptions/server-request.exception";
 
 @Injectable()
 export class MenuServerService {
     constructor(private readonly httpService: HttpService) {}
 
     public async getMenus(): Promise<MenuItemServerDto[]> {
+        const url = `${URL_MENU_SERVICE}/menus`
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
-                .get<MenuItemServerDto[]>(`${URL_MENU_SERVICE}/menus`)
+                .get<MenuItemServerDto[]>(url)
                 .then(menus => {
                     resolve(menus.data)
                 }).catch(error => {
-                console.log(error)
-                reject(error)
+                    console.log(error)
+                    throw new ServerRequestException(`Cannot execute request : ${url}`)
             });
         })
     }
@@ -40,14 +42,15 @@ export class MenuServerService {
     }
 
     public async getMenu(menuItemId: string): Promise<MenuItemServerDto> {
+        const url = `${URL_MENU_SERVICE}/menus/${menuItemId}`
         return new Promise((resolve, reject) => {
             this.httpService.axiosRef
-                .get<MenuItemServerDto>(`${URL_MENU_SERVICE}/menus/${menuItemId}`)
+                .get<MenuItemServerDto>(url)
                 .then(menus => {
                     resolve(menus.data)
                 }).catch(error => {
                 console.log(error)
-                reject(error)
+                throw new ServerRequestException(`Cannot execute request : ${url}`)
             });
         })
     }
