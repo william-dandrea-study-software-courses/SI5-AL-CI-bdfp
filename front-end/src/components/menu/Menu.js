@@ -9,7 +9,7 @@ import { useParams } from "react-router";
 import { useSnackbar } from "notistack";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 
-const Menu = observer(({ tableId }) => {
+const Menu = observer(() => {
     const [menuItems, setMenuItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [orderedItems, setOrderedItems] = useState([]);
@@ -24,17 +24,19 @@ const Menu = observer(({ tableId }) => {
             .finally(() => setIsLoading(false));
     }, [setIsLoading, setMenuItems])
 
-    const addToCart = useCallback((menuItem) => {
+    const addToCart = useCallback((menuItem, setHowMany) => {
         let newItems = orderedItems;
         const index = orderedItems.findIndex(item => item.menuItemId === menuItem._id);
         if (index >= 0) {
             newItems[index].howMany = newItems[index].howMany + 1
+            setHowMany(newItems[index].howMany);
         } else {
             newItems.push({
                 menuItemId: menuItem._id,
                 menuItemShortName: menuItem.shortName,
                 howMany: 1
             });
+            setHowMany(1);
         }
         setOrderedItems(newItems);
         enqueueSnackbar(menuItem.shortName + " a été ajouté à la commande", { variant: "success" })
@@ -45,31 +47,40 @@ const Menu = observer(({ tableId }) => {
             TableService.addMenuItemToTableOrder(item, id)
         })
         TableService.prepareTable(id)
-            .then(() => enqueueSnackbar("La commande est partie en cuisine"))
+            .then(() => enqueueSnackbar("La commande est partie en cuisine", {variant : "success"}))
             .then(() => navigate("/"));
     }, [enqueueSnackbar, id, orderedItems]
     );
 
-    const removeFromCart = useCallback((menuItem) => {
+    const removeFromCart = useCallback((menuItem, setHowMany) => {
         let newItems = orderedItems;
         const index = orderedItems.findIndex(item => item.menuItemId === menuItem._id);
         if (index >= 0) {
             newItems[index].howMany > 1 ?
-                newItems[index].howMany = newItems[index].howMany - 1 :
-                newItems = newItems.filter(item => item.menuItemId !== menuItem._id);
+                (newItems[index].howMany = newItems[index].howMany - 1) && setHowMany(newItems[index].howMany):
+                (newItems = newItems.filter(item => item.menuItemId !== menuItem._id)) && setHowMany(0);
+            enqueueSnackbar(menuItem.shortName + " a été retiré de la commande", {variant : "success"})
         }
         setOrderedItems(newItems);
     }, [orderedItems, setOrderedItems]);
+
+    const countItemInCart = (menuItem) => {
+        return orderedItems.filter(x => x.menuItemId === menuItem._id)[0]?.howMany
+    }
 
     const getItemByCategory = useCallback((category) =>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             {menuItems.filter(x => x.category === category).map(x =>
                 <Grid key={x.id} item xs={4}>
-                    <MenuCard addInCart={addToCart} removeFromCart={removeFromCart} menuItem={x} />
+                    <MenuCard
+                        inOrderItem={countItemInCart}
+                        addInCart={addToCart}
+                        removeFromCart={removeFromCart}
+                        menuItem={x} />
                 </Grid>
             )}
         </Grid>
-        , [addToCart, menuItems, removeFromCart]);
+        , [orderedItems, addToCart, menuItems, removeFromCart]);
 
     return (
         <>
