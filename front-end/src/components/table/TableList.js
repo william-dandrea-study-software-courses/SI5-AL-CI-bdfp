@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import { TableService } from "../../services";
+import { DiningService } from "../../services";
 import TableCard from "./TableCard";
 import { Grid, Typography } from "@mui/material";
 
@@ -8,11 +8,11 @@ const TableList = observer(() => {
     const [allTables, setAllTables] = useState([]);
 
     useEffect(() => {
-        TableService.getAllTables().then(resp => setAllTables(resp.data));
+        DiningService.getAllTables().then(resp => setAllTables(resp.data));
     }, [setAllTables]);
 
     const handleChange = () => {
-        TableService.getAllTables().then(resp => setAllTables(resp.data));
+        DiningService.getAllTables().then(resp => setAllTables(resp.data));
     }
 
     return (

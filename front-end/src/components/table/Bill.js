@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
-import { MenuService, TableService } from '../../services';
+import { MenuService, DiningService } from '../../services';
 
 const Bill = observer(({ tableOrderId }) => {
     const [allOrders, setAllOrders] = useState([]);
@@ -16,7 +16,7 @@ const Bill = observer(({ tableOrderId }) => {
     };
 
     useEffect(() => {
-        TableService.getTableOrdersById(tableOrderId)
+        DiningService.getTableOrdersById(tableOrderId)
             .then(async resp => {
                 setAllOrders(resp.data.lines);
                 let orders = resp.data.lines;

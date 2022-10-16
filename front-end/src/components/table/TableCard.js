@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import { Box, Button, Card, CardActions, CardContent, Typography, Modal, Input } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import { useNavigate } from "react-router";
-import { TableService } from "../../services";
+import { DiningService } from "../../services";
 import Bill from "./Bill";
 import { useSnackbar } from "notistack";
 
@@ -37,7 +37,7 @@ const TableCard = observer((props) => {
         const number = document.getElementById("customersCount");
         if (number !== null) {
             if (parseInt(number.value) > 0) {
-                TableService.openTable({
+                DiningService.openTable({
                     tableNumber: props.tableInfo.number,
                     customersCount: parseInt(number.value)
                 }).then(resp => navigate("/takeOrder/" + resp.data._id));
@@ -48,7 +48,7 @@ const TableCard = observer((props) => {
     }, [navigate, props.tableInfo])
 
     const closeTable = useCallback(() => {
-        TableService.closeTable(props.tableInfo.tableOrderId)
+        DiningService.closeTable(props.tableInfo.tableOrderId)
             .then(() => {
                 setFalseCloseTableModal();
                 props.handleChange();

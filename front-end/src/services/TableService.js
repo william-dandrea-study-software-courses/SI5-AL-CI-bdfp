@@ -15,7 +15,7 @@ const prepareTable = (tableOrderId) => axios.post(tableOrdersUrl + "/" + tableOr
 
 const closeTable = (id) => axios.post(tableOrdersUrl + "/" + id + "/bill");
 
-export const TableService = {
+export const DiningService = {
     getAllTables,
     openTable,
     addMenuItemToTableOrder,

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { observer } from "mobx-react-lite";
-import { MenuService, TableService } from "../../services";
+import { MenuService, DiningService } from "../../services";
 import { Grid, Typography, Button } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import MenuCard from "./MenuCard";
@@ -44,9 +44,9 @@ const Menu = observer(() => {
 
     const finalizeOrder = useCallback(async () => {
         for (const item of orderedItems) {
-            await TableService.addMenuItemToTableOrder(item, id);
+            await DiningService.addMenuItemToTableOrder(item, id);
         }
-        TableService.prepareTable(id).then(() => {
+        DiningService.prepareTable(id).then(() => {
             enqueueSnackbar("The order has been sent to the kitchen");
             delay(1000).then(() => navigate("/"));
         });
