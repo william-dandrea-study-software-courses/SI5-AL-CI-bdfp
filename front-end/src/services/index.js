@@ -1,5 +1,5 @@
 
-import { DiningService } from "./TableService"
+import { DiningService } from "./DiningService"
 import { MenuService } from "./MenuService";
 import { KitchenService } from "./KitchenService"
 
