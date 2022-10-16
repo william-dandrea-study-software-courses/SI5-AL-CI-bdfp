@@ -60,10 +60,15 @@ const closeTable = (tableOrderId) => {
   });
 };
 
+const updateTablesObservable = (tables) => {
+  tables$.next(tables);
+}
+
 export const TableService = {
   getAllTables,
   openTable,
   closeTable,
   serveTable,
-  tables$
+  tables$,
+  updateTablesObservable
 };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import {TableService} from "./TableService";
 
 
 const createOrder = (tableOrderId, cart) => {
@@ -14,7 +15,13 @@ const createOrder = (tableOrderId, cart) => {
     console.log(url)
     console.log(newCartBody)
 
-    return axios.post(url, newCartBody);
+    return new Promise((resolve, reject) => {
+        axios.post(url, newCartBody).then(tables => {
+            TableService.updateTablesObservable(tables.data)
+            resolve(tables.data)
+        })
+    })
+
 }
 
 export const OrderService = {

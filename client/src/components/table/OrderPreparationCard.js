@@ -18,7 +18,7 @@ const OrderPreparationCard = observer(({ preparation }) => {
   const servePreparation = () => {
     TableService.serveTable(preparation.preparation_id).then((v) => {
       console.log(v);
-      window.location.reload(true);
+      // window.location.reload(true);
     });
   };
 

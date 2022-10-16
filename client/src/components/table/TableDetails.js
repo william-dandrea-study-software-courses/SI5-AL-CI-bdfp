@@ -13,12 +13,17 @@ const TableDetails = () => {
   const [tableInfo, setTableInfo] = useState([]);
 
   useEffect(() => {
-      TableService.tables$.subscribe(tables => {
-          for (let table of tables) {
-              if (table.tableNumber === parseInt(tableNumber)) {
-                  setTableInfo(table);
+      TableService.tables$.subscribe(async tables => {
+          if (tables == null) {
+              await TableService.getAllTables()
+          } else {
+              for (let table of tables) {
+                  if (table.tableNumber === parseInt(tableNumber)) {
+                      setTableInfo(table);
+                  }
               }
           }
+
       })
   }, [setTableInfo, tableNumber]);
 
@@ -30,6 +35,7 @@ const TableDetails = () => {
     navigate("/" + tableInfo.tableOrderId + "/menu");
   }, [navigate, tableInfo]);
 
+
   const handleRefresh = useCallback(() => {
     window.location.reload(true);
   }, []);
@@ -39,9 +45,11 @@ const TableDetails = () => {
       <div style={{ position: "left" }} onClick={() => handleGoBack()}>
         <ArrowBackIosIcon />
       </div>
-      <div style={{ position: "right" }} onClick={() => handleRefresh()}>
+        <div style={{ position: "right" }} onClick={() => handleRefresh()}>
         <AutorenewIcon />
       </div>
+
+
       <Typography textAlign={"center"} marginBottom={2}>
         Table n°{tableNumber}
       </Typography>

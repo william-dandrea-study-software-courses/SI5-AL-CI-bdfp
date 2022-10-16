@@ -49,7 +49,7 @@ const TableCard = observer(({ tableInfo }) => {
   const handleCloseTable = useCallback(() => {
     TableService.closeTable(tableInfo.tableOrderId).then(() => {
       setTableTaken(false);
-      window.location.reload();
+      // window.location.reload();
     });
   }, [tableInfo.tableOrderId]);
 
