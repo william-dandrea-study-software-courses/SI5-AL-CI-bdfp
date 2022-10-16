@@ -1,10 +1,10 @@
 
-import React, { useCallback } from "react";
+import React, {useCallback, useEffect} from "react";
 import { observer } from 'mobx-react-lite';
 import { Box, Button, Card, CardActions, CardContent, Typography, Modal, Input } from "@mui/material";
-import { orange } from "@mui/material/colors";
+import {green, orange} from "@mui/material/colors";
 import { useNavigate } from "react-router";
-import { DiningService } from "../../services";
+import {DiningService, KitchenService} from "../../services";
 import Bill from "./Bill";
 import { useSnackbar } from "notistack";
 
@@ -31,7 +31,21 @@ const TableCard = observer((props) => {
     const [closeTableModal, setCloseTableModal] = React.useState(false);
     const setTrueCloseTableModal = () => setCloseTableModal(true);
     const setFalseCloseTableModal = () => setCloseTableModal(false);
+    const [hasItemsReady, setHasItemsReady] = React.useState(false)
     const { enqueueSnackbar } = useSnackbar();
+
+    const THREE_SEC_MS = 3000;
+    useEffect(() => {
+        const interval = setInterval(() => {
+            KitchenService.getPreparationsReady(props.tableInfo.number)
+                .then(resp => {
+                    if (resp.data.length > 0){
+                        setHasItemsReady(true);
+                    }
+                });
+        }, THREE_SEC_MS);
+        return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    }, [props.tableInfo.number, setHasItemsReady])
 
     const openTable = useCallback(() => {
         const number = document.getElementById("customersCount");
@@ -62,8 +76,10 @@ const TableCard = observer((props) => {
         }
     }, [navigate]);
 
+
+
     return (
-        <Card variant="outlined" style={{ backgroundColor: (props.tableInfo.taken ? orange["A100"] : "") }}>
+        <Card variant="outlined" style={{ backgroundColor: (props.tableInfo.taken ? (hasItemsReady ? green[300] : orange["A100"]) : "") }}>
             <CardContent onClick={() => navTableOrders(props.tableInfo)}>
                 <Typography textAlign={"center"}>Table n°{props.tableInfo.number} </Typography>
             </CardContent>

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 
 const MenuCard = observer(({ menuItem, addInCart, removeFromCart }) => {
