@@ -1,21 +1,24 @@
+import {Preparation} from "../../shared/dto/kitchen-server.dto";
+import {PreparationTableDto} from "../dto/preparation-table.dto";
+
 export class TableDetails {
     tableNumber: number;
     statusOrder: StatusTableOrder;
     isTaken: boolean;
     isOrderPaid: boolean;
-    lines: OrderItem[];
     tableOrderId: string | null;
-    readyToBeServedPreparationsId: string[];
+    preparations: PreparationTableDto[];
+    lines: OrderItem[] = [];
 
 
-    constructor(tableNumber: number, statusOrder: StatusTableOrder, isTaken: boolean, isOrderPaid: boolean, lines: OrderItem[], tableOrderId: string | null, readyToBeServedPreparationsId: string[]) {
+    constructor(tableNumber: number, statusOrder: StatusTableOrder, isTaken: boolean, isOrderPaid: boolean, tableOrderId: string | null, preparations: PreparationTableDto[], lines: OrderItem[]) {
         this.tableNumber = tableNumber;
         this.statusOrder = statusOrder;
         this.isTaken = isTaken;
         this.isOrderPaid = isOrderPaid;
-        this.lines = lines;
         this.tableOrderId = tableOrderId;
-        this.readyToBeServedPreparationsId = readyToBeServedPreparationsId;
+        this.preparations = preparations;
+        this.lines = lines;
     }
 }
 
