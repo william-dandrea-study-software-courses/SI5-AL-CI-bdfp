@@ -13,13 +13,13 @@ const TableDetails = () => {
   const [tableInfo, setTableInfo] = useState([]);
 
   useEffect(() => {
-    TableService.getAllTables().then((resp) => {
-      for (let table of resp.data) {
-        if (table.tableNumber === parseInt(tableNumber)) {
-          setTableInfo(table);
-        }
-      }
-    });
+      TableService.tables$.subscribe(tables => {
+          for (let table of tables) {
+              if (table.tableNumber === parseInt(tableNumber)) {
+                  setTableInfo(table);
+              }
+          }
+      })
   }, [setTableInfo, tableNumber]);
 
   const handleGoBack = useCallback(() => {

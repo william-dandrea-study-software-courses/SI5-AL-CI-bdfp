@@ -10,9 +10,15 @@ const TableList = observer(() => {
 
   useEffect(() => {
     setIsAllTableLoading(true);
-    TableService.getAllTables()
-      .then((resp) => setAllTables(resp.data))
-      .finally(() => setIsAllTableLoading(false));
+
+    TableService.tables$.subscribe(async tables => {
+        if (tables === null) {
+            TableService.getAllTables()
+        } else {
+            await setAllTables(tables);
+            await setIsAllTableLoading(false)
+        }
+    })
   }, [setAllTables, setIsAllTableLoading]);
 
   return (
