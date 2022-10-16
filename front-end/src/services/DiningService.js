@@ -1,7 +1,9 @@
 import axios from "axios";
 
-const tablesUrl = "http://localhost:3001/tables"
-const tableOrdersUrl = "http://localhost:3001/tableOrders"
+// const tablesUrl = "http://localhost:3001/tables"
+const tablesUrl = "https://dining.micro-restaurant.cryptoservice.tech/tables"
+// const tableOrdersUrl = "http://localhost:3001/tableOrders"
+const tableOrdersUrl = "https://dining.micro-restaurant.cryptoservice.tech/tableOrders"
 
 const getAllTables = () => axios.get(tablesUrl);
 

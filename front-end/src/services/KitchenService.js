@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const preparationsUrl = "http://localhost:3002/preparations"
+// const preparationsUrl = "http://localhost:3002/preparations"
+const preparationsUrl = "https://kitchen.micro-restaurant.cryptoservice.tech/preparations"
 
 const getPreparationsStarted = (tableNumber) => axios.get(preparationsUrl + "?tableNumber=" + tableNumber + "&state=preparationStarted");
 
