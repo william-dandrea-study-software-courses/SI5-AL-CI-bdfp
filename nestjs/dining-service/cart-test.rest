@@ -1,0 +1,20 @@
+### Open a new global cart
+POST http://localhost:3001/cart/1/openGlobalCart
+Content-Type: application/json
+
+{}
+
+
+### Close a new global cart
+POST http://localhost:3001/cart/1/closeGlobalCart
+Content-Type: application/json
+
+{}
+
+### Close a new global cart
+PUT http://localhost:3001/cart/1/createUserCart
+Content-Type: application/json
+
+{}
+
+
