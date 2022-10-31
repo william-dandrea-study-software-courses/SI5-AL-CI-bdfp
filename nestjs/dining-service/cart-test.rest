@@ -1,5 +1,5 @@
 ### Open a new global cart
-POST http://localhost:3001/cart/1/openGlobalCart
+POST http://localhost:3001/cart/2/openGlobalCart
 Content-Type: application/json
 
 {}
@@ -11,10 +11,28 @@ Content-Type: application/json
 
 {}
 
-### Close a new global cart
-PUT http://localhost:3001/cart/1/createUserCart
+### Create new user cart
+PUT http://localhost:3001/cart/2/createUserCart
 Content-Type: application/json
 
 {}
+
+### Add new menu item
+PUT http://localhost:3001/cart/1/addItemToUserCart/0
+Content-Type: application/json
+
+{
+  "id_item": "635f9d8211ff2020fb994369"
+}
+
+### Remove menu item
+PUT http://localhost:3001/cart/1/removeItemToUserCart/0
+Content-Type: application/json
+
+{
+  "id_item": "635f9d8211ff2020fb994369"
+}
+
+
 
 

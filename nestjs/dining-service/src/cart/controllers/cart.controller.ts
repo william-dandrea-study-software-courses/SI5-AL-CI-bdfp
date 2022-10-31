@@ -29,12 +29,12 @@ export class CartController {
     }
 
     @Put(':tableNumber/addItemToUserCart/:userCartId')
-    public async addItemToUserCart(@Param('tableNumber') tableNumber: number, @Param('userCartId') userCartId: string, @Body() menuItem: MenuItemDto ) {
+    public async addItemToUserCart(@Param('tableNumber') tableNumber: number, @Param('userCartId') userCartId: number, @Body() menuItem: MenuItemDto ) {
         return this.cartService.addItemToUserCart(tableNumber, userCartId, menuItem);
     }
 
     @Put(':tableNumber/removeItemToUserCart/:userCartId')
-    public async removeItemToUserCart(@Param('tableNumber') tableNumber: number, @Param('userCartId') userCartId: string, @Body() menuItem: MenuItemDto ) {
+    public async removeItemToUserCart(@Param('tableNumber') tableNumber: number, @Param('userCartId') userCartId: number, @Body() menuItem: MenuItemDto ) {
         return this.cartService.removeItemToUserCart(tableNumber, userCartId, menuItem);
     }
 

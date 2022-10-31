@@ -54,16 +54,25 @@ export class CartService {
         throw new NoGlobalCartExistException(tableNumber)
     }
 
-    public async addItemToUserCart(tableNumber: number, userCartId: string, menuItem: MenuItemDto): Promise<UserCart> {
+    public async addItemToUserCart(tableNumber: number, userCartId: number, menuItem: MenuItemDto): Promise<UserCart> {
         const currentCart: TableCart = await this.tableCartModel.findOne({table_number: tableNumber});
         if (currentCart) {
 
-            const currentUserCart: UserCart = await this.tableCartModel.findOne({'user_carts.id_user': userCartId});
+            //{'table_number': Number(tableNumber), 'user_carts.id_user': Number(userCartId)}
+            const currentUserCart: UserCart = currentCart.user_carts.find(uc => uc.id_user === Number(userCartId))
 
-            if (currentUserCart) {
+            if (currentUserCart !== null) {
 
+                currentUserCart.items_in_cart.push(menuItem.id_item);
+                // await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {items_in_cart: currentUserCart.items_in_cart})
+                console.log(currentUserCart)
 
-
+                const result = await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {'user_carts': currentCart.user_carts});
+                if (result) {
+                    return currentUserCart;
+                } else {
+                    throw new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot update the database")
+                }
 
             } else {
                 throw new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot find the user cart, please create a user cart with the good user_id")
@@ -73,8 +82,42 @@ export class CartService {
         throw new NoGlobalCartExistException(tableNumber)
     }
 
-    public async removeItemToUserCart(tableNumber: number, userCartId: string, menuItem: MenuItemDto): Promise<UserCart> {
-        return null;
+    public async removeItemToUserCart(tableNumber: number, userCartId: number, menuItem: MenuItemDto): Promise<UserCart> {
+        const currentCart: TableCart = await this.tableCartModel.findOne({table_number: tableNumber});
+        if (currentCart) {
+
+            //{'table_number': Number(tableNumber), 'user_carts.id_user': Number(userCartId)}
+            const currentUserCart: UserCart = currentCart.user_carts.find(uc => uc.id_user === Number(userCartId))
+
+            if (currentUserCart !== null) {
+
+                const indexOfElementToRemove: number = currentUserCart.items_in_cart.findIndex(it => it === String(menuItem.id_item));
+                // await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {items_in_cart: currentUserCart.items_in_cart})
+                console.log(currentUserCart)
+
+                if (indexOfElementToRemove >= 0) {
+                    console.log(indexOfElementToRemove)
+
+                    currentUserCart.items_in_cart.splice(indexOfElementToRemove, 1);
+
+                    const result = await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {'user_carts': currentCart.user_carts});
+                    if (result) {
+                        return currentUserCart;
+                    } else {
+                        throw new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot update the database")
+                    }
+                } else {
+                    throw new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY, "This item is not present in the user cart")
+                }
+
+
+
+            } else {
+                throw new ErrorDto(HttpStatus.UNPROCESSABLE_ENTITY, "Cannot find the user cart, please create a user cart with the good user_id")
+            }
+        }
+
+        throw new NoGlobalCartExistException(tableNumber)
     }
 
     public async validateGlobalOrder(tableNumber: number): Promise<any> {
