@@ -1,4 +1,4 @@
-import {Body, Controller, Get, Param, Post, Put} from '@nestjs/common';
+import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
 import {CartService} from "../services/cart.service";
 import {TableCart, UserCart} from "../schemas/table-cart.schema";
 import {MenuItemDto} from "../dto/menu-item.dto";
@@ -40,7 +40,7 @@ export class CartController {
         return this.cartService.removeItemToUserCart(tableNumber, userCartId, menuItem);
     }
 
-    @Post(':tableNumber/validateGlobalOrder')
+    @Delete(':tableNumber/validateGlobalOrder')
     public async validateGlobalOrder(@Param('tableNumber') tableNumber: number): Promise<any> {
         return this.cartService.validateGlobalOrder(tableNumber);
     }

@@ -41,7 +41,7 @@ Content-Type: application/json
 {}
 
 ### Delete global cart when the clients leave table
-POST http://localhost:3001/cart/2/deleteGlobalCart
+DELETE http://localhost:3001/cart/2/deleteGlobalCart
 Content-Type: application/json
 
 {}
