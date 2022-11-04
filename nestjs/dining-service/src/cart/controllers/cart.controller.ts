@@ -14,14 +14,15 @@ export class CartController {
     }
 
     @Post('/:tableNumber/openGlobalCart')
-    public async openGlobalCart(@Param('tableNumber') tableNumber: number):  Promise<TableCart> {
-        return this.cartService.openGlobalCart(tableNumber);
+    public async openGlobalCart(@Param('tableNumber') tableNumber: number, @Body() body: {customersCount: number}):  Promise<TableCart> {
+        return this.cartService.openGlobalCart(tableNumber, body.customersCount);
     }
 
+    /*
     @Post('/:tableNumber/closeGlobalCart')
     public async closeGlobalCart(@Param('tableNumber') tableNumber: number):  Promise<TableCart> {
         return this.cartService.closeGlobalCart(tableNumber);
-    }
+    }*/
 
     @Put(':tableNumber/createUserCart')
     public async createUserCart(@Param('tableNumber') tableNumber: number): Promise<TableCart> {

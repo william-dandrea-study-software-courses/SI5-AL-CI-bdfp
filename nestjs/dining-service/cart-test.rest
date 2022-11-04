@@ -2,14 +2,12 @@
 POST http://localhost:3001/cart/2/openGlobalCart
 Content-Type: application/json
 
-{}
+{
+  "customersCount": 4
+}
 
 
-### Close a new global cart
-POST http://localhost:3001/cart/1/closeGlobalCart
-Content-Type: application/json
 
-{}
 
 ### Create new user cart
 PUT http://localhost:3001/cart/2/createUserCart
@@ -18,20 +16,26 @@ Content-Type: application/json
 {}
 
 ### Add new menu item
-PUT http://localhost:3001/cart/1/addItemToUserCart/0
+PUT http://localhost:3001/cart/2/addItemToUserCart/3
 Content-Type: application/json
 
 {
-  "id_item": "635f9d8211ff2020fb994369"
+  "id_item": "636523483d479f4112b55e4e"
 }
 
 ### Remove menu item
-PUT http://localhost:3001/cart/1/removeItemToUserCart/0
+PUT http://localhost:3001/cart/2/removeItemToUserCart/2
 Content-Type: application/json
 
 {
-  "id_item": "635f9d8211ff2020fb994369"
+  "id_item": "6365213d27fa39156098f6e9"
 }
+
+### Validate all order and pass command
+POST http://localhost:3001/cart/2/validateGlobalOrder
+Content-Type: application/json
+
+{}
 
 
 

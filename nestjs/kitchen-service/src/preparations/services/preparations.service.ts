@@ -81,6 +81,7 @@ export class PreparationsService {
   async cookItems(preparationRequestDto: PreparationRequestDto): Promise<Preparation[]> {
     const tableIsValid: Boolean = await this.diningProxyService.isTableNumberValid(preparationRequestDto.tableNumber);
 
+
     if (!tableIsValid) {
       throw new TableNumberNotFoundException(preparationRequestDto.tableNumber);
     }

@@ -20,6 +20,7 @@ import { KitchenProxyService } from './kitchen-proxy.service';
 import { TableOrderIdNotFoundException } from '../exceptions/table-order-id-not-found.exception';
 import { AddMenuItemDtoNotFoundException } from '../exceptions/add-menu-item-dto-not-found.exception';
 import { TableOrderAlreadyBilledException } from '../exceptions/table-order-already-billed.exception';
+import {AddMenuItemNotFoundException} from "../exceptions/add-menu-item-not-found.exception";
 
 @Injectable()
 export class TableOrdersService {
@@ -97,6 +98,48 @@ export class TableOrdersService {
     );
   }
 
+  async addOrderingLineToTableOrderViaItemsId(tableOrderId: string, idNewMenuItem: string): Promise<TableOrder>  {
+    const tableOrder: TableOrder = await this.findOne(tableOrderId);
+
+    if (tableOrder.billed !== null) {
+      throw new TableOrderAlreadyBilledException(tableOrder);
+    }
+
+    const orderingItem: OrderingItem = await this.menuProxyService.findById(idNewMenuItem);
+
+    if (orderingItem === null) {
+      throw new AddMenuItemNotFoundException(idNewMenuItem);
+    }
+
+    const alreadyOrderedLinesIndexes = [];
+    tableOrder.lines.forEach((line, index) => {
+      if (!line.sentForPreparation && line.item._id === orderingItem._id) {
+        alreadyOrderedLinesIndexes.push(index);
+      }
+    });
+
+    if (alreadyOrderedLinesIndexes.length > 0) {
+      const orderingLineIndex = alreadyOrderedLinesIndexes[0];
+      tableOrder.lines[orderingLineIndex].howMany += 1;
+
+      return this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });
+    }
+
+    const orderingLine: OrderingLine = new OrderingLine();
+    orderingLine.item = orderingItem;
+    orderingLine.howMany = 1;
+
+    return this.tableOrderModel.findByIdAndUpdate(
+        tableOrder._id,
+        { $push: { lines: orderingLine } },
+        { returnDocument: 'after' },
+    );
+
+
+  }
+
+
+
   async manageOrderingLines(tableNumber: number, orderingLines: OrderingLine[]): Promise<OrderingLinesWithPreparations> {
     let orderingLinesToSend: OrderingLine[] = [];
 
@@ -109,6 +152,7 @@ export class TableOrdersService {
       return orderingLine;
     });
 
+    console.log(orderingLinesToSend)
     const preparations: PreparationDto[] = await this.kitchenProxyService.sendItemsToCook(tableNumber, orderingLinesToSend);
 
     return {
@@ -120,16 +164,21 @@ export class TableOrdersService {
   async sendItemsForPreparation(tableOrderId: string): Promise<PreparationDto[]> {
     const tableOrder: TableOrder = await this.findOne(tableOrderId);
 
+
     if (tableOrder.billed !== null) {
       throw new TableOrderAlreadyBilledException(tableOrder);
     }
 
     const managedLines: OrderingLinesWithPreparations = await this.manageOrderingLines(tableOrder.tableNumber, tableOrder.lines);
 
+
     tableOrder.lines = managedLines.orderingLines;
     tableOrder.preparations = tableOrder.preparations.concat(managedLines.preparations);
 
-    await this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });
+
+    const result = await this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });
+
+
 
     return managedLines.preparations;
   }

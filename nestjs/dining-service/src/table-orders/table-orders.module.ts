@@ -24,5 +24,6 @@ import { TablesModule } from '../tables/tables.module';
     MenuProxyService,
     KitchenProxyService,
   ],
+  exports: [TableOrdersService]
 })
 export class TableOrdersModule {}

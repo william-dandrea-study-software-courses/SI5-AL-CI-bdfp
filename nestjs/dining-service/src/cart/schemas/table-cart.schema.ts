@@ -20,6 +20,10 @@ export class TableCart {
     table_number: number;
 
     @ApiProperty()
+    @Prop({required: true})
+    table_order_id: string
+
+    @ApiProperty()
     @IsArray()
     @Prop({ required: true, default: [] })
     user_carts: UserCart[];
