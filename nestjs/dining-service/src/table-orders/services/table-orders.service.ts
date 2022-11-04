@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {forwardRef, Inject, Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -21,6 +21,7 @@ import { TableOrderIdNotFoundException } from '../exceptions/table-order-id-not-
 import { AddMenuItemDtoNotFoundException } from '../exceptions/add-menu-item-dto-not-found.exception';
 import { TableOrderAlreadyBilledException } from '../exceptions/table-order-already-billed.exception';
 import {AddMenuItemNotFoundException} from "../exceptions/add-menu-item-not-found.exception";
+import {CartService} from "../../cart/services/cart.service";
 
 @Injectable()
 export class TableOrdersService {
@@ -192,9 +193,12 @@ export class TableOrdersService {
 
     tableOrder.billed = new Date();
 
+
     // TODO: Send payment for the table order
 
     // TODO: Move next line when billing is managed
+
+
     await this.tablesService.releaseTable(tableOrder.tableNumber);
 
     return this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });

@@ -13,16 +13,17 @@ export class CartController {
         return this.cartService.getGlobalCartForOneTable(tableNumber);
     }
 
+
     @Post('/:tableNumber/openGlobalCart')
     public async openGlobalCart(@Param('tableNumber') tableNumber: number, @Body() body: {customersCount: number}):  Promise<TableCart> {
         return this.cartService.openGlobalCart(tableNumber, body.customersCount);
     }
 
-    /*
-    @Post('/:tableNumber/closeGlobalCart')
+
+    @Post('/:tableNumber/deleteGlobalCart')
     public async closeGlobalCart(@Param('tableNumber') tableNumber: number):  Promise<TableCart> {
-        return this.cartService.closeGlobalCart(tableNumber);
-    }*/
+        return this.cartService.deleteGlobalCart(tableNumber);
+    }
 
     @Put(':tableNumber/createUserCart')
     public async createUserCart(@Param('tableNumber') tableNumber: number): Promise<TableCart> {
@@ -43,7 +44,4 @@ export class CartController {
     public async validateGlobalOrder(@Param('tableNumber') tableNumber: number): Promise<any> {
         return this.cartService.validateGlobalOrder(tableNumber);
     }
-
-
-
 }

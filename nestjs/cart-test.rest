@@ -6,6 +6,12 @@ Content-Type: application/json
   "customersCount": 4
 }
 
+
+### Get info about a table cart
+GET http://localhost:3001/cart/2
+Content-Type: application/json
+
+
 ### Create new user cart
 PUT http://localhost:3001/cart/2/createUserCart
 Content-Type: application/json
@@ -13,7 +19,7 @@ Content-Type: application/json
 {}
 
 ### Add new menu item
-PUT http://localhost:3001/cart/2/addItemToUserCart/3
+PUT http://localhost:3001/cart/2/addItemToUserCart/1
 Content-Type: application/json
 
 {
@@ -21,15 +27,21 @@ Content-Type: application/json
 }
 
 ### Remove menu item
-PUT http://localhost:3001/cart/2/removeItemToUserCart/2
+PUT http://localhost:3001/cart/2/removeItemToUserCart/1
 Content-Type: application/json
 
 {
-  "id_item": "6365213d27fa39156098f6e9"
+  "id_item": "636523483d479f4112b55e4e"
 }
 
 ### Validate all order and pass command
 POST http://localhost:3001/cart/2/validateGlobalOrder
+Content-Type: application/json
+
+{}
+
+### Delete global cart when the clients leave table
+POST http://localhost:3001/cart/2/deleteGlobalCart
 Content-Type: application/json
 
 {}

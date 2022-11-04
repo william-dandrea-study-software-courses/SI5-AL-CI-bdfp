@@ -11,11 +11,12 @@ import {HttpModule} from "@nestjs/axios";
 @Module({
   imports: [
       MongooseModule.forFeature([{ name: TableCart.name, schema: TableCartSchema }]),
-    HttpModule,
+      HttpModule,
       TableOrdersModule,
 
   ],
   controllers: [CartController],
-  providers: [CartService, KitchenProxyService, MenuProxyService]
+  providers: [CartService, KitchenProxyService, MenuProxyService],
+  exports: [CartService]
 })
 export class CartModule {}

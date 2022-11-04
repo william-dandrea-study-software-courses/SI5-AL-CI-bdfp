@@ -24,8 +24,9 @@ export class CartService {
 
         const potentialCurrentOpenedGlobalCart = await this.tableCartModel.findOne({table_number: tableNumber});
 
-
         if (potentialCurrentOpenedGlobalCart === null) {
+
+
 
             const startOrderingResult: TableOrder = await this.tableOrderService.startOrdering({tableNumber: tableNumber, customersCount: customerCount})
 
@@ -36,17 +37,27 @@ export class CartService {
             return await this.tableCartModel.create(tableCart);
         }
 
-        throw new GlobalCartAlreadyExistException(tableNumber);
+        return this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {user_carts: []}, { returnDocument: 'after' })
+
+
     }
 
     private async closeGlobalCart(tableNumber: number): Promise<TableCart> {
-        const currentOpenedGlobalCart = await this.tableCartModel.findOneAndDelete({table_number: tableNumber})
+        const currentOpenedGlobalCart: TableCart = await this.tableCartModel.findOne({table_number: tableNumber})
 
-        if (currentOpenedGlobalCart !== null) {
-            return currentOpenedGlobalCart;
+        if (currentOpenedGlobalCart) {
+            for (const userCart of currentOpenedGlobalCart.user_carts) {
+                userCart.items_in_cart = [];
+            }
+
+            return this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {user_carts: currentOpenedGlobalCart.user_carts});
         }
 
         throw new NoGlobalCartExistException(tableNumber)
+    }
+
+    public async deleteGlobalCart(tableNumber: number): Promise<TableCart> {
+        return this.tableCartModel.findOneAndDelete({table_number: tableNumber}, { returnDocument: 'after' });
     }
 
     public async createUserCart(tableNumber: number): Promise<TableCart> {
@@ -72,7 +83,8 @@ export class CartService {
             //{'table_number': Number(tableNumber), 'user_carts.id_user': Number(userCartId)}
             const currentUserCart: UserCart = currentCart.user_carts.find(uc => uc.id_user === Number(userCartId))
 
-            if (currentUserCart !== null) {
+
+            if (currentUserCart) {
 
                 const isMenuItemIdExist: boolean = await this.menuProxyService.isMenuItemIdExist(menuItem.id_item)
 
@@ -154,7 +166,13 @@ export class CartService {
     }
 
     public async getGlobalCartForOneTable(tableNumber: number): Promise<TableCart>  {
-        return null;
+        const result: TableCart = await this.tableCartModel.findOne({table_number: tableNumber});
+
+        if (result) {
+            return result
+        }
+
+        throw new NoGlobalCartExistException(tableNumber)
     }
 
 

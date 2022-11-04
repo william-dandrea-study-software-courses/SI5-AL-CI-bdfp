@@ -12,6 +12,7 @@ import { TableNumberNotFoundException } from '../exceptions/table-number-not-fou
 import { TableAlreadyTakenException } from '../exceptions/table-already-taken.exception';
 import { TableAlreadyFreeException } from '../exceptions/table-already-free.exception';
 import { TablesWithOrderService } from '../../tables-with-order/services/tables-with-order.service';
+import {CartService} from "../../cart/services/cart.service";
 
 @Injectable()
 export class TablesService {
@@ -70,6 +71,7 @@ export class TablesService {
     }
 
     table.taken = false;
+
 
     return this.tableModel.findByIdAndUpdate(table._id, table, { returnDocument: 'after' });
   }
