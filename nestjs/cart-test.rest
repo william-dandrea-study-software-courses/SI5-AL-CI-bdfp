@@ -6,9 +6,6 @@ Content-Type: application/json
   "customersCount": 4
 }
 
-
-
-
 ### Create new user cart
 PUT http://localhost:3001/cart/2/createUserCart
 Content-Type: application/json
