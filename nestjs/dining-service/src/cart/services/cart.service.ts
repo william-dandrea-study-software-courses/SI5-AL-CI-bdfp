@@ -27,7 +27,6 @@ export class CartService {
         if (potentialCurrentOpenedGlobalCart === null) {
 
 
-
             const startOrderingResult: TableOrder = await this.tableOrderService.startOrdering({tableNumber: tableNumber, customersCount: customerCount})
 
             const tableCart: TableCart = new TableCart();
