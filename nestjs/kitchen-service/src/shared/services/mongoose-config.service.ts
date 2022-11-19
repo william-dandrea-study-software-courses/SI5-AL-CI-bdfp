@@ -11,7 +11,7 @@ export class MongooseConfigService implements MongooseOptionsFactory {
   createMongooseOptions(): MongooseModuleOptions {
     const mongodbConfig = this.configService.get<MongoDBConfig>('mongodb');
     return {
-      uri: `mongodb://${mongodbConfig.host}:${mongodbConfig.port}/${mongodbConfig.database}`,
+      uri: `${mongodbConfig.uri}`,
     };
   }
 }

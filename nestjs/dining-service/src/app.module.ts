@@ -15,6 +15,7 @@ import { TablesModule } from './tables/tables.module';
 import { TableOrdersModule } from './table-orders/table-orders.module';
 import { TablesWithOrderModule } from './tables-with-order/tables-with-order.module';
 import { CartModule } from './cart/cart.module';
+import { BillingModule } from './billing/billing.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CartModule } from './cart/cart.module';
     TableOrdersModule,
     TablesWithOrderModule,
     CartModule,
+    BillingModule,
   ],
   providers: [StartupLogicService],
 })

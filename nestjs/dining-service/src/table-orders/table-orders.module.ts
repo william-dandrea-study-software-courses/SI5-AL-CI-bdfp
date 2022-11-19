@@ -12,6 +12,8 @@ import { KitchenProxyService } from './services/kitchen-proxy.service';
 import { TablesModule } from '../tables/tables.module';
 import {CartModule} from "../cart/cart.module";
 import {CartService} from "../cart/services/cart.service";
+import {BillingService} from "../billing/services/billing.service";
+import {BillingModule} from "../billing/billing.module";
 
 @Global()
 @Module({
@@ -19,7 +21,7 @@ import {CartService} from "../cart/services/cart.service";
     MongooseModule.forFeature([{ name: TableOrder.name, schema: TableOrderSchema }]),
     HttpModule,
     TablesModule,
-
+    BillingModule
   ],
   controllers: [TableOrdersController],
   providers: [

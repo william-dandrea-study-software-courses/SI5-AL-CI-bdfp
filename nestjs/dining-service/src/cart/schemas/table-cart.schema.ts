@@ -21,7 +21,16 @@ export class TableCart {
 
     @ApiProperty()
     @Prop({required: true})
-    table_order_id: string
+    table_order_id: string;
+
+    @ApiProperty()
+    @Prop({required: true})
+    table_bill_id: string;
+
+    @ApiProperty()
+    @IsNumber()
+    @Prop({required: true, min: 0})
+    price: number;
 
     @ApiProperty()
     @IsArray()
@@ -44,9 +53,21 @@ export class UserCart {
     id_user: number;
 
     @ApiProperty()
+    @IsNumber()
+    @Prop({required: true, min: 0})
+    price: number;
+
+    @ApiProperty()
     @IsArray()
     @Prop({ required: true, default: [] })
-    items_in_cart: string[];
+    items_in_cart: ItemInCart[];
+}
+
+
+export class ItemInCart {
+    id_item: string;
+    shortName: string;
+    price: number;
 }
 
 

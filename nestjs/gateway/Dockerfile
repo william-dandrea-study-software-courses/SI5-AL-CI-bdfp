@@ -1,57 +1,30 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
+###############################
+#        PRODUCTION           #
+###############################
+FROM node:19-alpine3.15 As production
 
-FROM node:16.16.0-alpine As development
-
+# Create app directory
 WORKDIR /usr/src/app
 
-COPY --chown=node:node package*.json ./
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 
-RUN npm ci
+# Install app dependencies
+RUN npm install
 
-COPY --chown=node:node . .
+# Bundle app source
+COPY . .
 
-USER node
-
-###################
-# BUILD FOR PRODUCTION
-###################
-
-FROM node:16.16.0-alpine As build
-
-WORKDIR /usr/src/app
-
-COPY --chown=node:node package*.json ./
-
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
-
-COPY --chown=node:node . .
-
+# Creates a "dist" folder with the production build
 RUN npm run build
 
-ENV NODE_ENV production
-
-RUN npm ci --only=production && npm cache clean --force
-
-USER node
-
-###################
-# PRODUCTION
-###################
-
-FROM node:16.16.0-alpine As production
-
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/dist ./dist
-COPY --chown=node:node --from=build /usr/src/app/.env.production ./.env
-
+# Start the server using the production build
 CMD [ "node", "dist/main.js" ]
 
-###################
-# DOCKER-DEVELOMENT
-###################
-FROM node:16.16.0-alpine As docker-development
+###############################
+#         DEVELOPMENT         #
+###############################
+FROM node:19-alpine3.15 As development
 
 WORKDIR /usr/src/app
 
