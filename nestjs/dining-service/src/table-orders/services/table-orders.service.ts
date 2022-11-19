@@ -1,4 +1,4 @@
-import {forwardRef, Inject, Injectable} from '@nestjs/common';
+import {forwardRef, HttpException, HttpStatus, Inject, Injectable} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -22,6 +22,7 @@ import { AddMenuItemDtoNotFoundException } from '../exceptions/add-menu-item-dto
 import { TableOrderAlreadyBilledException } from '../exceptions/table-order-already-billed.exception';
 import {AddMenuItemNotFoundException} from "../exceptions/add-menu-item-not-found.exception";
 import {CartService} from "../../cart/services/cart.service";
+import {BillingService} from "../../billing/services/billing.service";
 
 @Injectable()
 export class TableOrdersService {
@@ -30,6 +31,7 @@ export class TableOrdersService {
     private readonly tablesService: TablesService,
     private readonly menuProxyService: MenuProxyService,
     private readonly kitchenProxyService: KitchenProxyService,
+    private readonly billingService: BillingService,
   ) {}
 
   async findAll(): Promise<TableOrder[]> {
@@ -181,8 +183,6 @@ export class TableOrdersService {
 
     const result = await this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });
 
-
-
     return managedLines.preparations;
   }
 
@@ -195,14 +195,20 @@ export class TableOrdersService {
 
     tableOrder.billed = new Date();
 
+    const tableBill = await this.billingService.billByTableOrderId(tableOrderId);
+    if (tableBill) {
+      // TODO: Send payment for the table order
+      // TODO: Move next line when billing is managed
+      if (tableBill.remaining_amount_to_be_paid > 0) {
+        throw new HttpException(`You cannot close a table if the bill is not paid`, HttpStatus.UNPROCESSABLE_ENTITY)
 
-    // TODO: Send payment for the table order
+      }
 
-    // TODO: Move next line when billing is managed
+      await this.tablesService.releaseTable(tableOrder.tableNumber);
+      return this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });
 
+    }
+    throw new HttpException(`Cannot find bill for this table`, HttpStatus.UNPROCESSABLE_ENTITY)
 
-    await this.tablesService.releaseTable(tableOrder.tableNumber);
-
-    return this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });
   }
 }

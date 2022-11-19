@@ -94,4 +94,9 @@ export class BillingService {
     public async recoverOneBilling(tableBillId: string): Promise<TableBill> {
         return this.tableBillModel.findOne({_id: tableBillId});
     }
+
+
+    public async billByTableOrderId(tableOrderId: string): Promise<TableBill> {
+        return this.tableBillModel.findOne({table_order_id: tableOrderId});
+    }
 }
