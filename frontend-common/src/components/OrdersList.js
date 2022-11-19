@@ -32,6 +32,8 @@ const OrdersList = observer(() => {
         DiningService.validateGlobalCart(tableNumber).then(result => {
             console.log(result)
             navigate(`/following-command/${tableNumber}`)
+        }).catch(e => {
+            console.log(e)
         })
     }, [navigate])
 
