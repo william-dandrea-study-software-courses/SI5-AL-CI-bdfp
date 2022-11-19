@@ -25,6 +25,11 @@ export class TableBill {
     table_order_id: string
 
     @ApiProperty()
+    @IsNumber()
+    @Prop({ required: true, min: 0 })
+    remaining_amount_to_be_paid: number;
+
+    @ApiProperty()
     @IsArray()
     @Prop({required: true, default: []})
     user_bills: UserBills[];
@@ -40,12 +45,26 @@ export class UserBills {
     user_id: number;
 
     @ApiProperty()
+    @IsNumber()
+    @Prop({ required: true, min: 0 })
+    remaining_amount_to_be_paid: number;
+
+
+    @ApiProperty()
     @IsArray()
     @Prop({required: true, default: []})
-    items_in_cart: string[];
+    items_in_cart: ItemInCart[];
 
     @ApiProperty()
     @IsBoolean()
     @Prop({required: true, default: false})
     is_paid: boolean;
+}
+
+
+
+export class ItemInCart {
+    id_item: string;
+    shortName: string;
+    price: number;
 }

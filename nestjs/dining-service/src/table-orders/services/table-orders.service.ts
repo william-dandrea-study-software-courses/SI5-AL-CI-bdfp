@@ -106,6 +106,8 @@ export class TableOrdersService {
       throw new TableOrderAlreadyBilledException(tableOrder);
     }
 
+    // console.log(idNewMenuItem)
+
     const orderingItem: OrderingItem = await this.menuProxyService.findById(idNewMenuItem);
 
     if (orderingItem === null) {

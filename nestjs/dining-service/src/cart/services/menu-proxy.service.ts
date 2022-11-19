@@ -31,9 +31,9 @@ export class MenuProxyService {
     }
 
 
-    public async isMenuItemIdExist(itemId: string): Promise<boolean> {
+    public async isMenuItemIdExist(itemId: string): Promise<any | null> {
         await this.retrieveFullMenu();
-        return (this._menuItemsById[itemId] || null) != null;
+        return this._menuItemsById[itemId] || null;
     }
 
 }

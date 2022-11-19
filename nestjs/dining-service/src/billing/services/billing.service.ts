@@ -17,6 +17,7 @@ export class BillingService {
         tableBillMongo.table_number = tableBill.tableNumber;
         tableBillMongo.table_order_id = tableBill.tableOrderId;
         tableBillMongo.user_bills = [];
+        tableBillMongo.remaining_amount_to_be_paid = 0;
 
         return await this.tableBillModel.create(tableBillMongo);
     }
@@ -34,10 +35,11 @@ export class BillingService {
             userBillMongo.user_id = userBill.userId;
             userBillMongo.is_paid = false;
             userBillMongo.items_in_cart = userBill.itemsInCart;
+            userBillMongo.remaining_amount_to_be_paid = userBill.itemsInCart.map<number>(i => i.price).reduce((a, b) => a+b)
 
             currentTable.user_bills.push(userBillMongo)
 
-            const result = await this.tableBillModel.findOneAndUpdate({_id: userBill.tableBillId}, {'user_bills': currentTable.user_bills});
+            const result = await this.tableBillModel.findOneAndUpdate({_id: userBill.tableBillId}, {'user_bills': currentTable.user_bills, 'remaining_amount_to_be_paid': currentTable.remaining_amount_to_be_paid + userBillMongo.remaining_amount_to_be_paid});
             if (result) {
                 return userBillMongo;
             } else {
@@ -54,9 +56,10 @@ export class BillingService {
 
             for (const v of currentTable.user_bills) {
                 v.is_paid = true;
+                v.remaining_amount_to_be_paid = 0
             }
 
-            return this.tableBillModel.findOneAndUpdate({_id: tableBillId}, {'user_bills': currentTable.user_bills}, {returnDocument: 'after'});
+            return this.tableBillModel.findOneAndUpdate({_id: tableBillId}, {'user_bills': currentTable.user_bills, 'remaining_amount_to_be_paid': 0}, {returnDocument: 'after'});
 
         }
         throw new HttpException(`Cannot find tableBilling with the ID ${tableBillId}`, HttpStatus.UNPROCESSABLE_ENTITY)
@@ -74,8 +77,10 @@ export class BillingService {
             }
 
             currentTable.user_bills[indexSelectedUser].is_paid = true;
+            const amountToDecrease: number = currentTable.user_bills[indexSelectedUser].remaining_amount_to_be_paid;
+            currentTable.user_bills[indexSelectedUser].remaining_amount_to_be_paid = 0;
 
-            return this.tableBillModel.findOneAndUpdate({_id: tableBillId}, {'user_bills': currentTable.user_bills}, {returnDocument: 'after'});
+            return this.tableBillModel.findOneAndUpdate({_id: tableBillId}, {'user_bills': currentTable.user_bills, 'remaining_amount_to_be_paid': currentTable.remaining_amount_to_be_paid - amountToDecrease}, {returnDocument: 'after'});
 
         }
         throw new HttpException(`Cannot find tableBilling with the ID ${tableBillId}`, HttpStatus.UNPROCESSABLE_ENTITY)

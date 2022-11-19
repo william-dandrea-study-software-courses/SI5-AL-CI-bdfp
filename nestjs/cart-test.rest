@@ -19,19 +19,19 @@ Content-Type: application/json
 {}
 
 ### Add new menu item
-PUT http://localhost:3001/cart/2/addItemToUserCart/0
+PUT http://localhost:3001/cart/2/addItemToUserCart/2
 Content-Type: application/json
 
 {
-  "id_item": "6378856798f00cffb04b07e5"
+  "id_item": "6378bcf0cbb19b2a35878dbd"
 }
 
 ### Remove menu item
-PUT http://localhost:3001/cart/2/removeItemToUserCart/1
+PUT http://localhost:3001/cart/2/removeItemToUserCart/2
 Content-Type: application/json
 
 {
-  "id_item": "636523483d479f4112b55e4e"
+  "id_item": "6378bcf0cbb19b2a35878dbd"
 }
 
 ### Validate all order and pass command
@@ -48,17 +48,17 @@ Content-Type: application/json
 
 
 ### Get one billing
-GET http://localhost:3001/billing/6378acf33af0c583839487e4
+GET http://localhost:3001/billing/6378ba8db209010666d1f85e
 Content-Type: application/json
 
 ### Pay for all
-POST http://localhost:3001/billing/6378acf33af0c583839487e4/pay-for-all
+POST http://localhost:3001/billing/6378ba8db209010666d1f85e/pay-for-all
 Content-Type: application/json
 
 {}
 
 ### Pay for one
-POST http://localhost:3001/billing/6378acf33af0c583839487e4/0/pay-for-one
+POST http://localhost:3001/billing/6378ba8db209010666d1f85e/0/pay-for-one
 Content-Type: application/json
 
 {}
