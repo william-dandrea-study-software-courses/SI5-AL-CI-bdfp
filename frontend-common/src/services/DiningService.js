@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const urlCart = "https://dining.micro-restaurant.cryptoservice.tech/cart";
 const urlBilling = "https://dining.micro-restaurant.cryptoservice.tech/billing";
+const urlTableOrder = "https://dining.micro-restaurant.cryptoservice.tech/tableOrders";
 
 
 const openGlobalCart = (tableNumber, customersCount) => {
@@ -16,6 +17,19 @@ const getGlobalCart = (tableNumber) => {
     return axios.get(`${urlCart}/${tableNumber}`)
 }
 
+
+const finishTable = (tableNumber, tableOrderId) => {
+
+    return new Promise(resolve => {
+        axios.post(`${urlTableOrder}/${tableOrderId}/bill`).then(r => {
+            axios.post(`${urlCart}/${tableNumber}/deleteGlobalCart`).then(r2 => {
+                resolve(r2)
+            })
+        })
+    })
+
+}
+
 const getTableBill = (tableBillId) => {
     return axios.get(`${urlBilling}/${tableBillId}`)
 }
@@ -28,6 +42,9 @@ const payBillForMe = (tableBillId, idUser) => {
     return axios.post(`${urlBilling}/${tableBillId}/${idUser}/pay-for-one`, {})
 }
 
+
+
+
 export const DiningService = {
     openGlobalCart,
     validateGlobalCart,
@@ -35,5 +52,6 @@ export const DiningService = {
     getGlobalCart,
     getTableBill,
     payBillForEveryone,
-    payBillForMe
+    payBillForMe,
+    finishTable
 }

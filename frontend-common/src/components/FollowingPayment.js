@@ -2,9 +2,12 @@ import {useParams} from "react-router-dom";
 import {Button, Card, CardContent, CardHeader, Divider, List, ListItem, ListItemText, Typography} from "@mui/material";
 import {useCallback, useEffect, useState} from "react";
 import {DiningService} from "../services";
+import {useNavigate} from "react-router";
 
 
 const FollowingPayment = () => {
+
+    const navigate = useNavigate();
 
     const { tableNumber } = useParams();
     const [globalCart, setGlobalCart] = useState(null);
@@ -26,6 +29,13 @@ const FollowingPayment = () => {
 
     }, [setGlobalCart, tableNumber, setTableBill])
 
+
+    const leaveTable = useCallback((tableOrderId, tableNumber) => {
+        DiningService.finishTable(tableNumber, tableOrderId).then(r => {
+            console.log("oui")
+            navigate('/')
+        })
+    }, [])
 
     const payForEveryone = useCallback((tableBillId) => {
         console.log("Pay for everyone")
@@ -64,6 +74,8 @@ const FollowingPayment = () => {
                     </List>
 
                 </CardContent>
+
+                <Button variant="contained" color="error" onClick={() => leaveTable(tableBill.table_order_id, tableBill.table_number)}>Leave Table</Button>
             </Card>
             : <div></div>
     )
