@@ -1,13 +1,15 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
+import {useCallback, useEffect, useState} from "react";
 import { useParams } from "react-router-dom";
 import { DiningService } from "../services";
-import {Card, Typography} from "@mui/material";
+import {Button, Card, Typography} from "@mui/material";
 import UserOrders from "./UserOrders";
+import {useNavigate} from "react-router";
 
 const OrdersList = observer(() => {
     const [allUserOrders, setAllUserOrders] = useState([]);
     const { tableNumber } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -26,6 +28,13 @@ const OrdersList = observer(() => {
         */
     }, [tableNumber]);
 
+    const launchPreparation = useCallback(() => {
+        DiningService.validateGlobalCart(tableNumber).then(result => {
+            console.log(result)
+            navigate(`/following-command/${tableNumber}`)
+        })
+    }, [navigate])
+
     return (
         <div>
             <Typography textAlign={"center"} marginBottom={2} variant="h1">Table orders</Typography>
@@ -34,6 +43,8 @@ const OrdersList = observer(() => {
                         <UserOrders userCart={x}></UserOrders>
                     </Card>
                 )}
+
+            <Button variant="contained" color="success" style={{width: "100%"}} onClick={launchPreparation}>Validate cart and send to preparation</Button>
         </div>
     )
 });
