@@ -30,7 +30,6 @@ const OrdersList = observer(() => {
                 )}
             </Grid>
         </div>
-
     )
 });
 

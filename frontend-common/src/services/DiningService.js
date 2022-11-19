@@ -3,7 +3,9 @@ import axios from 'axios';
 const urlCart = "https://dining.micro-restaurant.cryptoservice.tech/cart";
 
 
-const openGlobalCart = (tableNumber, customersCount) => axios.post(`${urlCart}/${tableNumber}/openGlobalCart`, { "customersCount": customersCount });
+const openGlobalCart = (tableNumber, customersCount) => {
+    return axios.post(`${urlCart}/${tableNumber}/openGlobalCart`, { "customersCount": customersCount });
+}
 
 const validateGlobalCart = (tableNumber) => axios.delete(`${urlCart}/${tableNumber}/validateGlobalCart`);
 
