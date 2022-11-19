@@ -10,14 +10,22 @@ const OrdersList = observer(() => {
     const { tableNumber } = useParams();
 
     useEffect(() => {
-        console.log(tableNumber);
+        console.log(tableNumber)
+
         DiningService.getAllUserCarts(tableNumber).then((response) => {
             if (response.data.user_carts.length > 0) {
                 setAllUserOrders(response.data.user_carts);
+                console.log(response.data.user_carts)
             }
-
         });
+
+        /* const intervalId = setInterval(() => {
+
+        }, 1000 * 5) // in milliseconds
+        return () => clearInterval(intervalId) */
     }, [tableNumber]);
+
+
 
     return (
         <div>
