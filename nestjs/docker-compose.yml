@@ -10,6 +10,9 @@ services:
     restart: always
     ports:
       - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=qf7YqLMqtbBs8iC85TCX
     networks:
       - nestjs-restaurant-network-dev
 
@@ -33,6 +36,7 @@ services:
       - SWAGGERUI_DESCRIPTION=Dining Service Open API definition
       - MENU_SERVICE_URL_WITH_PORT=menu-service-dev:3000
       - KITCHEN_SERVICE_URL_WITH_PORT=kitchen-service-dev:3000
+      - DATABASE_URI=mongodb://admin:qf7YqLMqtbBs8iC85TCX@database-dev:27017/dining-db
     volumes:
       - ./dining-service:/usr/src/app
       - /usr/src/app/node_modules
@@ -59,6 +63,7 @@ services:
       - SWAGGERUI_PATH=doc/menus
       - SWAGGERUI_TITLE=Micro-Service Restaurant - Menu Service
       - SWAGGERUI_DESCRIPTION=Menu Service Open API definition
+      - DATABASE_URI=mongodb://admin:qf7YqLMqtbBs8iC85TCX@database-dev:27017/menu-db
     volumes:
       - ./menu-service:/usr/src/app
       - /usr/src/app/node_modules
@@ -86,6 +91,7 @@ services:
       - SWAGGERUI_TITLE=Micro-Service Restaurant - Kitchen Service
       - SWAGGERUI_DESCRIPTION=Kitchen Service Open API definition
       - DINING_SERVICE_URL_WITH_PORT=dining-service-dev:3000
+      - DATABASE_URI=mongodb://admin:qf7YqLMqtbBs8iC85TCX@database-dev:27017/kitchen-db
     volumes:
       - ./kitchen-service:/usr/src/app
       - /usr/src/app/node_modules
