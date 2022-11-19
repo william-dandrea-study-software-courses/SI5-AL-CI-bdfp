@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { DiningService } from "../services";
-import { Grid, Typography } from "@mui/material";
+import {Card, Typography} from "@mui/material";
 import UserOrders from "./UserOrders";
 
 const OrdersList = observer(() => {
@@ -10,7 +10,6 @@ const OrdersList = observer(() => {
     const { tableNumber } = useParams();
 
     useEffect(() => {
-        console.log(tableNumber)
 
         DiningService.getAllUserCarts(tableNumber).then((response) => {
             if (response.data.user_carts.length > 0) {
@@ -19,24 +18,22 @@ const OrdersList = observer(() => {
             }
         });
 
-        /* const intervalId = setInterval(() => {
+        /*
+        const intervalId = setInterval(() => {
 
-        }, 1000 * 5) // in milliseconds
-        return () => clearInterval(intervalId) */
+        }, 1 * 1000) // in milliseconds
+        return () => clearInterval(intervalId);
+        */
     }, [tableNumber]);
-
-
 
     return (
         <div>
-            <Typography textAlign={"center"} marginBottom={2}>Table orders</Typography>
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Typography textAlign={"center"} marginBottom={2} variant="h1">Table orders</Typography>
                 {allUserOrders?.map((x, index) =>
-                    <Grid item xs={6} key={index}>
+                    <Card style={{marginBottom: "20px"}} key={index}>
                         <UserOrders userCart={x}></UserOrders>
-                    </Grid>
+                    </Card>
                 )}
-            </Grid>
         </div>
     )
 });
