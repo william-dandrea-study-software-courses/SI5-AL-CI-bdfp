@@ -45,7 +45,7 @@ export class CartController {
         return this.cartService.removeItemToUserCart(tableNumber, userCartId, menuItem);
     }
 
-    @Delete(':tableNumber/validateGlobalOrder')
+    @Post(':tableNumber/validateGlobalOrder')
     public async validateGlobalOrder(@Param('tableNumber') tableNumber: number): Promise<any> {
         return this.cartService.validateGlobalOrder(tableNumber);
     }

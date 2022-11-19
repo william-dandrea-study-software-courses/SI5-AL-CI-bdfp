@@ -19,11 +19,11 @@ Content-Type: application/json
 {}
 
 ### Add new menu item
-PUT http://localhost:3001/cart/2/addItemToUserCart/1
+PUT http://localhost:3001/cart/2/addItemToUserCart/0
 Content-Type: application/json
 
 {
-  "id_item": "636523483d479f4112b55e4e"
+  "id_item": "6378856798f00cffb04b07e5"
 }
 
 ### Remove menu item
@@ -47,5 +47,18 @@ Content-Type: application/json
 {}
 
 
+### Get one billing
+GET http://localhost:3001/billing/6378acf33af0c583839487e4
+Content-Type: application/json
 
+### Pay for all
+POST http://localhost:3001/billing/6378acf33af0c583839487e4/pay-for-all
+Content-Type: application/json
 
+{}
+
+### Pay for one
+POST http://localhost:3001/billing/6378acf33af0c583839487e4/0/pay-for-one
+Content-Type: application/json
+
+{}

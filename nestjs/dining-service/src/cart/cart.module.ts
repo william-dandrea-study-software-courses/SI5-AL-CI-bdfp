@@ -7,13 +7,14 @@ import { KitchenProxyService } from './services/kitchen-proxy.service';
 import { MenuProxyService } from './services/menu-proxy.service';
 import {TableOrdersModule} from "../table-orders/table-orders.module";
 import {HttpModule} from "@nestjs/axios";
+import {BillingModule} from "../billing/billing.module";
 
 @Module({
   imports: [
       MongooseModule.forFeature([{ name: TableCart.name, schema: TableCartSchema }]),
       HttpModule,
       TableOrdersModule,
-
+      BillingModule
   ],
   controllers: [CartController],
   providers: [CartService, KitchenProxyService, MenuProxyService],

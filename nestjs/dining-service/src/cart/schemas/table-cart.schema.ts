@@ -21,7 +21,11 @@ export class TableCart {
 
     @ApiProperty()
     @Prop({required: true})
-    table_order_id: string
+    table_order_id: string;
+
+    @ApiProperty()
+    @Prop({required: true})
+    table_bill_id: string;
 
     @ApiProperty()
     @IsArray()

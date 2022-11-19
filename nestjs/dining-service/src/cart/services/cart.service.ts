@@ -10,6 +10,8 @@ import {TableOrdersService} from "../../table-orders/services/table-orders.servi
 import {TableOrder} from "../../table-orders/schemas/table-order.schema";
 import {PreparationDto} from "../../table-orders/dto/preparation.dto";
 import {MenuProxyService} from "./menu-proxy.service";
+import {BillingService} from "../../billing/services/billing.service";
+import {TableBill} from "../../billing/schemas/user-bill.schema";
 
 @Injectable()
 export class CartService {
@@ -18,6 +20,7 @@ export class CartService {
         @InjectModel(TableCart.name) private tableCartModel: Model<TableCartDocument>,
         private readonly tableOrderService: TableOrdersService,
         private readonly menuProxyService: MenuProxyService,
+        private readonly billingService: BillingService,
     ) {}
 
     public async openGlobalCart(tableNumber: number, customerCount: number): Promise<TableCart> {
@@ -26,12 +29,14 @@ export class CartService {
 
         if (potentialCurrentOpenedGlobalCart === null) {
 
-
             const startOrderingResult: TableOrder = await this.tableOrderService.startOrdering({tableNumber: tableNumber, customersCount: customerCount})
 
             const tableCart: TableCart = new TableCart();
             tableCart.table_number = tableNumber;
             tableCart.table_order_id = startOrderingResult._id;
+
+            const tableBill: TableBill = await this.billingService.createTableBill({tableNumber: tableNumber, tableOrderId: startOrderingResult._id})
+            tableCart.table_bill_id = tableBill._id;
 
             return await this.tableCartModel.create(tableCart);
         }
@@ -69,6 +74,7 @@ export class CartService {
             userCart.items_in_cart = [];
 
             await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {'$push': {'user_carts': userCart}})
+
             return await this.tableCartModel.findOne({table_number: tableNumber});
         }
 
@@ -154,10 +160,13 @@ export class CartService {
                         throw new ErrorDto(HttpStatus.NOT_FOUND, `Cannot send the item ${itemId} to the ordering line`)
                     }
                 }
+
+                await this.billingService.createUserBill({tableBillId: currentCart.table_bill_id, userId: userCart.id_user, itemsInCart: userCart.items_in_cart})
             }
 
             const result = await this.tableOrderService.sendItemsForPreparation(currentCart.table_order_id);
             await this.closeGlobalCart(tableNumber);
+
             return result;
         }
 
