@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { KitchenService } from "../services";
+import {DiningService, KitchenService} from "../services";
 import { Grid, Card, CardContent, Typography } from '@mui/material';
 import { red, green, orange } from "@mui/material/colors";
 
@@ -10,9 +10,14 @@ const FollowingPreparation = () => {
     const [preparedItems, setPreparedItems] = useState([]);
 
     useEffect(() => {
-        KitchenService.getAllPreparations(tableNumber).then((response) => {
-            setPreparedItems(response);
-        });
+
+        const intervalId = setInterval(() => {
+            KitchenService.getAllPreparations(tableNumber).then((response) => {
+                setPreparedItems(response);
+            });
+        }, 1 * 1000) // in milliseconds
+        return () => clearInterval(intervalId);
+
     }, [setPreparedItems, tableNumber]);
 
 

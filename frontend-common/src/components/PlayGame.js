@@ -24,7 +24,6 @@ const PlayGame = () => {
 
 
     const userClick = (x, y) => {
-        console.log(x, y)
 
         switch (`${x}${y}`) {
             case '11': {
@@ -84,7 +83,6 @@ const PlayGame = () => {
         }
 
         setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
-
         watchTermination();
 
     }
@@ -115,6 +113,11 @@ const PlayGame = () => {
             (tile13 === 'O' && tile22 === 'O' && tile31 === 'O')
         ) {
             alert("Player O won");
+            gameTerminated()
+        }
+
+        if (tile11 !== '' && tile21 !== '' && tile31 !== '' && tile12 !== '' && tile22 !== '' && tile32 !== '' && tile13 !== '' && tile23 !== '' && tile33 !== '') {
+            alert("Anyone win");
             gameTerminated()
         }
 
