@@ -11,16 +11,19 @@ const FollowingPayment = () => {
     const [tableBill, setTableBill] = useState(null);
 
     useEffect(() => {
-        DiningService.getGlobalCart(tableNumber).then(result => {
-            console.log(result.data)
-            setGlobalCart(result.data)
+        const intervalId = setInterval(() => {
+            DiningService.getGlobalCart(tableNumber).then(result => {
+                setGlobalCart(result.data)
 
-            DiningService.getTableBill(result.data.table_bill_id).then(r => {
-                setTableBill(r.data);
+                DiningService.getTableBill(result.data.table_bill_id).then(r => {
+                    setTableBill(r.data);
+                })
+            }).catch(e => {
+                console.log(e)
             })
-        }).catch(e => {
-            console.log(e)
-        })
+        }, 1 * 1000) // in milliseconds
+        return () => clearInterval(intervalId);
+
     }, [setGlobalCart, tableNumber, setTableBill])
 
 

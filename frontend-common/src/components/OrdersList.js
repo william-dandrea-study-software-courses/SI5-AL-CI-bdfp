@@ -13,19 +13,15 @@ const OrdersList = observer(() => {
 
     useEffect(() => {
 
-        DiningService.getAllUserCarts(tableNumber).then((response) => {
-            if (response.data.user_carts.length > 0) {
-                setAllUserOrders(response.data.user_carts);
-                console.log(response.data.user_carts)
-            }
-        });
-
-        /*
         const intervalId = setInterval(() => {
-
+            DiningService.getAllUserCarts(tableNumber).then((response) => {
+                if (response.data.user_carts.length > 0) {
+                    setAllUserOrders(response.data.user_carts);
+                }
+            });
         }, 1 * 1000) // in milliseconds
         return () => clearInterval(intervalId);
-        */
+
     }, [tableNumber]);
 
     const launchPreparation = useCallback(() => {
