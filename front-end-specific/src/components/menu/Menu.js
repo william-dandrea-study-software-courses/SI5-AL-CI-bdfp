@@ -6,18 +6,19 @@ import { Grid, Typography, Button } from "@mui/material";
 import { orange } from "@mui/material/colors";
 import MenuCard from "./MenuCard";
 import { useParams } from "react-router";
+import {useSnackbar} from "notistack";
 
 
 const Menu = observer(() => {
     const [menuItems, setMenuItems] = useState([]);
 
     const [orderedItems, setOrderedItems] = useState([]);
-    const { id } = useParams();
-
     const navigate = useNavigate();
+    const snackbar = useSnackbar();
 
     useEffect(() => {
         MenuService.getAllMenu().then(resp => setMenuItems(resp.data));
+        console.log(DiningService.userId);
     }, [setMenuItems])
 
     const addToCart = useCallback((menuItem, setHowMany) => {
@@ -44,13 +45,11 @@ const Menu = observer(() => {
 
     const finalizeOrder = useCallback(async () => {
         for (const item of orderedItems) {
-            await DiningService.addMenuItemToTableOrder(item, id);
+            await DiningService.addItemToUserCart({id_item: item.menuItemId});
         }
-        DiningService.prepareTable(id).then(() => {
-
-            delay(1000).then(() => navigate("/"));
-        });
-    }, [id, orderedItems, navigate]);
+        snackbar.enqueueSnackbar("Commande validée", {variant: 'success'})
+        navigate("/")
+    }, [navigate, orderedItems]);
 
 
     const removeFromCart = useCallback((menuItem, setHowMany) => {
@@ -67,7 +66,7 @@ const Menu = observer(() => {
     const getItemByCategory = useCallback((category) =>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 {menuItems.filter(x => x.category === category).map((x, index) =>
-                    <Grid key={index} item xs={6}>
+                    <Grid key={index} item xs={3}>
                         <MenuCard
                             addInCart={addToCart}
                             removeFromCart={removeFromCart}

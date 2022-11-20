@@ -1,10 +1,13 @@
 import { AllRoutes } from "./routes/routes";
+import {SnackbarProvider} from "notistack";
 
 function App() {
   return (
       <div className="App">
         <header className="App-header"></header>
-        <AllRoutes />
+          <SnackbarProvider>
+              <AllRoutes />
+          </SnackbarProvider>
       </div>
   );
 }

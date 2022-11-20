@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import { Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+import {Button, Card, CardActions, CardContent, CardMedia, Typography} from "@mui/material";
 import React, { useState } from "react";
 
 
@@ -12,6 +12,12 @@ const MenuCard = observer(({ menuItem, addInCart, removeFromCart }) => {
                     <Typography textAlign={"center"}>{menuItem.shortName}</Typography>
                     <Typography textAlign={"center"}>In cart : {itemsNumber}</Typography>
                 </CardContent>
+                <CardMedia
+                    component="img"
+                    height="194"
+                    image={menuItem.image}
+                    alt={menuItem.fullName}
+                />
                 <CardActions>
                     <Button size="small" color={"success"} onClick={() => addInCart(menuItem, setItemsNumber)}>Add</Button>
                     {(itemsNumber > 0) ?
