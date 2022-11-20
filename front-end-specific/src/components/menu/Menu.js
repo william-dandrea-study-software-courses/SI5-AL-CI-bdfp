@@ -21,52 +21,31 @@ const Menu = observer(() => {
         console.log(DiningService.userId);
     }, [setMenuItems])
 
-    const addToCart = useCallback((menuItem, setHowMany) => {
-        let newItems = orderedItems;
-        const index = orderedItems.findIndex(item => item.menuItemId === menuItem._id);
-        if (index >= 0) {
-            newItems[index].howMany = newItems[index].howMany + 1
-            setHowMany(newItems[index].howMany);
-        } else {
-            newItems.push({
-                menuItemId: menuItem._id,
-                menuItemShortName: menuItem.shortName,
-                howMany: 1
-            });
-            setHowMany(1);
-        }
-        setOrderedItems(newItems);
+    const addToCart = useCallback(async (menuItem) => {
+        await DiningService.addItemToUserCart({id_item: menuItem._id});
+        snackbar.enqueueSnackbar("Element ajouté à votre panier", {variant: 'success'})
+    }, [snackbar]);
 
-    }, [orderedItems]);
-
-    function delay(time) {
-        return new Promise(resolve => setTimeout(resolve, time));
-    }
 
     const finalizeOrder = useCallback(async () => {
-        for (const item of orderedItems) {
-            await DiningService.addItemToUserCart({id_item: item.menuItemId});
-        }
-        snackbar.enqueueSnackbar("Commande validée", {variant: 'success'})
         navigate("/")
-    }, [navigate, orderedItems]);
+    }, [navigate]);
 
 
-    const removeFromCart = useCallback((menuItem, setHowMany) => {
-        let newItems = orderedItems;
-        const index = orderedItems.findIndex(item => item.menuItemId === menuItem._id);
-        if (index >= 0) {
-            newItems[index].howMany > 1 ?
-                (newItems[index].howMany = newItems[index].howMany - 1) && setHowMany(newItems[index].howMany) :
-                (newItems = newItems.filter(item => item.menuItemId !== menuItem._id)) && setHowMany(0);
+    const removeFromCart = useCallback(async (menuItem) => {
+        try {
+            await DiningService.removeItemFromCart({id_item: menuItem._id});
+            snackbar.enqueueSnackbar("Element retiré de votre panier", {variant: 'success'})
+        } catch (error){
+            snackbar.enqueueSnackbar("L'élement n'est pas dans votre panier et ne peut donc pas être retiré", {variant: "error"});
         }
-        setOrderedItems(newItems);
-    }, [orderedItems, setOrderedItems]);
+
+    }, [snackbar]);
 
     const getItemByCategory = useCallback((category) =>
             <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
                 {menuItems.filter(x => x.category === category).map((x, index) =>
-                    <Grid key={index} item xs={3}>
+                    <Grid key={index} item xs={6}>
                         <MenuCard
                             addInCart={addToCart}
                             removeFromCart={removeFromCart}
@@ -93,7 +72,7 @@ const Menu = observer(() => {
                   justifyContent="center">
                 <Grid item textAlign={"center"}
                       style={{ backgroundColor: orange["A100"], borderRadius: "5px", marginRight: "8px" }} xs={8}>
-                    <Button fullWidth color={"info"} onClick={() => finalizeOrder()}>Validate the order</Button>
+                    <Button fullWidth color={"info"} onClick={() => finalizeOrder()}>Retourner à l'accueil</Button>
                 </Grid>
             </Grid>
         </>

@@ -26,6 +26,8 @@ const getTableBillId = () => {
     })
 };
 
+const removeItemFromCart = (id_item) => axios.put(cartUrl + "/" + tableNumber + "/removeItemToUserCart/" + userId, id_item)
+
 const pay = (tableBillId) => axios.post(billingUrl + "/" + tableBillId + "/" + userId + "/pay-for-one");
 
 const addItemToUserCart = (id_item) => axios.put(cartUrl + "/" + tableNumber + "/addItemToUserCart/" + userId, id_item)
@@ -49,4 +51,5 @@ export const DiningService = {
     getTableNumber,
     pay,
     getTableBillId,
+    removeItemFromCart
 }
