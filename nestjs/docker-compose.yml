@@ -1,0 +1,122 @@
+version: "3.8"
+
+networks:
+  nestjs-restaurant-network-dev:
+    driver: bridge
+
+services:
+  database-dev:
+    image: "mongo:4.4.15"
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=qf7YqLMqtbBs8iC85TCX
+    networks:
+      - nestjs-restaurant-network-dev
+
+  dining-service-dev:
+    build:
+      context: ./dining-service
+      dockerfile: ./Dockerfile
+      target: development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - "3001:3000"
+    environment:
+      - APP_PORT=3000
+      - APP_NAME=dining-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=dining-db
+      - SWAGGERUI_PATH=doc/dining
+      - SWAGGERUI_TITLE=MicroService Restaurant - Dining Service
+      - SWAGGERUI_DESCRIPTION=Dining Service Open API definition
+      - MENU_SERVICE_URL_WITH_PORT=menu-service-dev:3000
+      - KITCHEN_SERVICE_URL_WITH_PORT=kitchen-service-dev:3000
+      - DATABASE_URI=mongodb://admin:qf7YqLMqtbBs8iC85TCX@database-dev:27017
+    volumes:
+      - ./dining-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - database-dev
+    networks:
+      - nestjs-restaurant-network-dev
+
+  menu-service-dev:
+    build:
+      context: ./menu-service
+      dockerfile: ./Dockerfile
+      target: development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - "3000:3000"
+    environment:
+      - APP_PORT=3000
+      - APP_NAME=menu-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=menu-db
+      - SWAGGERUI_PATH=doc/menus
+      - SWAGGERUI_TITLE=Micro-Service Restaurant - Menu Service
+      - SWAGGERUI_DESCRIPTION=Menu Service Open API definition
+      - DATABASE_URI=mongodb://admin:qf7YqLMqtbBs8iC85TCX@database-dev:27017
+    volumes:
+      - ./menu-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - database-dev
+    networks:
+      - nestjs-restaurant-network-dev
+
+  kitchen-service-dev:
+    build:
+      context: ./kitchen-service
+      dockerfile: ./Dockerfile
+      target: development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - "3002:3000"
+    environment:
+      - APP_PORT=3000
+      - APP_NAME=kitchen-service-dev
+      - MONGODB_HOST=database-dev
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=kitchen-db
+      - SWAGGERUI_PATH=doc/kitchen
+      - SWAGGERUI_TITLE=Micro-Service Restaurant - Kitchen Service
+      - SWAGGERUI_DESCRIPTION=Kitchen Service Open API definition
+      - DINING_SERVICE_URL_WITH_PORT=dining-service-dev:3000
+      - DATABASE_URI=mongodb://admin:qf7YqLMqtbBs8iC85TCX@database-dev:27017
+    volumes:
+      - ./kitchen-service:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - database-dev
+    networks:
+      - nestjs-restaurant-network-dev
+
+  gateway-dev:
+    build:
+      context: ./gateway
+      dockerfile: ./Dockerfile
+      target: development
+    restart: always
+    command: npm run start:dev
+    ports:
+      - "9500:3000"
+    environment:
+      - APP_PORT=3000
+      - APP_NAME=gateway
+      - MENU_SERVICE_URL_WITH_PORT=menu-service-dev:3000
+      - DINING_SERVICE_URL_WITH_PORT=dining-service-dev:3000
+      - KITCHEN_SERVICE_URL_WITH_PORT=kitchen-service-dev:3000
+    depends_on:
+      - database-dev
+    networks:
+      - nestjs-restaurant-network-dev
+
