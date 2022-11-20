@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  kitchen-client:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    ports:
+      - "3080:80"

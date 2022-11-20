@@ -29,7 +29,7 @@ export class CartController {
     }
 
     @Put(':tableNumber/createUserCart')
-    public async createUserCart(@Param('tableNumber') tableNumber: number): Promise<TableCart> {
+    public async createUserCart(@Param('tableNumber') tableNumber: number): Promise<UserCart> {
         return this.cartService.createUserCart(tableNumber);
     }
 

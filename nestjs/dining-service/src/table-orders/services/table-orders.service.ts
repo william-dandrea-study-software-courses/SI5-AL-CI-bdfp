@@ -199,10 +199,10 @@ export class TableOrdersService {
     if (tableBill) {
       // TODO: Send payment for the table order
       // TODO: Move next line when billing is managed
-      if (tableBill.remaining_amount_to_be_paid > 0) {
-        throw new HttpException(`You cannot close a table if the bill is not paid`, HttpStatus.UNPROCESSABLE_ENTITY)
 
-      }
+      /*if (tableBill.remaining_amount_to_be_paid > 0) {
+        throw new HttpException(`You cannot close a table if the bill is not paid`, HttpStatus.UNPROCESSABLE_ENTITY)
+      } */
 
       await this.tablesService.releaseTable(tableOrder.tableNumber);
       return this.tableOrderModel.findByIdAndUpdate(tableOrder._id, tableOrder, { returnDocument: 'after' });

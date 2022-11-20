@@ -1,4 +1,4 @@
-import {HttpStatus, Injectable} from '@nestjs/common';
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {ItemInCart, TableCart, TableCartDocument, UserCart} from "../schemas/table-cart.schema";
 import {MenuItemDto} from "../dto/menu-item.dto";
 import {Model} from "mongoose";
@@ -62,10 +62,11 @@ export class CartService {
     }
 
     public async deleteGlobalCart(tableNumber: number): Promise<TableCart> {
+        await this.billingService.deleteBill(tableNumber);
         return this.tableCartModel.findOneAndDelete({table_number: tableNumber}, { returnDocument: 'after' });
     }
 
-    public async createUserCart(tableNumber: number): Promise<TableCart> {
+    public async createUserCart(tableNumber: number): Promise<UserCart> {
         const currentCart: TableCart = await this.tableCartModel.findOne({table_number: tableNumber});
 
         if (currentCart != null) {
@@ -75,9 +76,14 @@ export class CartService {
             userCart.items_in_cart = [];
             userCart.price = 0;
 
-            await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {'$push': {'user_carts': userCart}})
+            const result = await this.tableCartModel.findOneAndUpdate({table_number: tableNumber}, {'$push': {'user_carts': userCart}})
 
-            return await this.tableCartModel.findOne({table_number: tableNumber});
+            if (result) {
+                return userCart;
+            } else {
+                throw new HttpException("Cannot write in DB", HttpStatus.UNPROCESSABLE_ENTITY)
+            }
+            // return await this.tableCartModel.findOne({table_number: tableNumber});
         }
 
         throw new NoGlobalCartExistException(tableNumber)
