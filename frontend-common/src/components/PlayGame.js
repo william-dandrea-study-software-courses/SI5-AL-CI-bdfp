@@ -146,7 +146,7 @@ const PlayGame = () => {
             <CardContent>
 
                 <table>
-                    <tbody>
+                    <tbody style={{textAlign: "center"}}>
                     <tr>
                         <td style={style} onClick={() => userClick(1,1)}>{tile11}</td>
                         <td style={style} onClick={() => userClick(2,1)}>{tile21}</td>

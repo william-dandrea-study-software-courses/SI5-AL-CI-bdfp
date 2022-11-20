@@ -5,7 +5,7 @@ const UserOrders = (props) => {
 
     return (
         <div>
-            <Typography variant="h4">Person {props.userCart.id_user}</Typography>
+            <Typography variant="h4">Person {props.userCart.id_user + 1}</Typography>
 
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                 {props.userCart.items_in_cart.map((value, index) => (

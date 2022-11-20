@@ -36,17 +36,17 @@ const PageAccueil = (callback, deps) => {
         <SnackbarProvider>
             <Grid container direction={"column"} alignItems={"center"} style={{marginTop: "10%"}}>
                 <Grid item xs={12}>
-                    <Typography textAlign={"center"} variant={'h3'} paddingBottom={"10%"}> Bienvenue au restaurant IZDEGUIZ</Typography>
+                    <Typography textAlign={"center"} variant={'h3'} paddingBottom={"10%"}> Bienvenue au REST'au rang</Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <Input id="standard-basic" label="N° de table" variant="standard" onChange={(event) => setTableNumber(event.target.value)} inputProps={{style: {textAlign: "center"}}} value={tableNumber} />
                 </Grid>
                 <Grid item xs={12}>
                     <Grid container alignItems={"center"} style={{marginTop: "20%"}}>
-                        <Grid item xs={userId? 6 : 12} textAlign={"center"}>
-                            <Button color={"success"} onClick={() => startOrder()} disabled={!Boolean(tableNumber)}> {userId? "Commander autre chose" : "Commencer la commande"}</Button>
+                        <Grid item xs={userId !== null? 6 : 12} textAlign={"center"}>
+                            <Button color={"success"} onClick={() => startOrder()} disabled={!Boolean(tableNumber)}> {userId !== null? "Commander autre chose" : "Commencer la commande"}</Button>
                         </Grid>
-                        {userId ?
+                        {userId !== null ?
                             <Grid item xs={6} textAlign={"center"}>
                                 <Button color={"success"} onClick={() => pay()}>Payer</Button>
                             </Grid>
