@@ -62,6 +62,7 @@ export class CartService {
     }
 
     public async deleteGlobalCart(tableNumber: number): Promise<TableCart> {
+        await this.billingService.deleteBill(tableNumber);
         return this.tableCartModel.findOneAndDelete({table_number: tableNumber}, { returnDocument: 'after' });
     }
 

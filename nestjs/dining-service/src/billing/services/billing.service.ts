@@ -99,4 +99,8 @@ export class BillingService {
     public async billByTableOrderId(tableOrderId: string): Promise<TableBill> {
         return this.tableBillModel.findOne({table_order_id: tableOrderId});
     }
+
+    public async deleteBill(tableNumber: number) {
+        return this.tableBillModel.findOneAndDelete({table_number: tableNumber})
+    }
 }
